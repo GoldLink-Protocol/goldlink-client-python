@@ -1,0 +1,15 @@
+Python client for GoldLink.
+
+The library is currently tested against Python versions 2.7, 3.4, 3.5, 3.6, 3.9, and 3.11.
+
+## Installation
+
+The `goldlink-client-python` package is available on [PyPI](https://pypi.org/project/goldlink-client-python). Install with `pip`:
+
+```bash
+pip install goldlink-client-python
+```
+
+## Getting Started
+
+The `Client` object can be created with different levels of authentication depending on which features are needed. For more complete examples, see the [examples](./examples/) directory, as well as [the integration tests](./integration_tests/).
