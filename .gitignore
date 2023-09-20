@@ -1,0 +1,15 @@
+# VS Code
+.vscode/
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+
+# Local testing
+test_local.py
+.env
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+.python-version
