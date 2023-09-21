@@ -14,6 +14,11 @@ setup(
     name='goldlink-client-python',
     version='0.0.1',
     packages=find_packages(),
+    package_data={
+        'goldlink': [
+            'abi/*.json',
+        ],
+    },
     description='GoldLink client for borrowing, lending and active management',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
