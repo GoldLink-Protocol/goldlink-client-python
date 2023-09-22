@@ -8,8 +8,8 @@ ASSET_USDC = 'USDC'
 
 # ------------ Contract Addresses ------------
 
-# subject to change
-ADDRESS_MANAGER_LOCAL = '0x959922bE3CAee4b8Cd9a407cc3ac1C251C2007B1'
+# subject to change if deployed multiple times after restarting anvil.
+ADDRESS_MANAGER_ANVIL = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
 
 # ------------ Ethereum Transactions ------------
 DEFAULT_GAS_AMOUNT = 250000
@@ -22,6 +22,7 @@ TOKEN_CONTRACTS = {
     ASSET_USDC: {
         NETWORK_ID_MAINNET: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
         NETWORK_ID_GOERLI: '0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63',
+        NETWORK_ID_ANVIL: '0x5FbDB2315678afecb367f032d93F642f64180aa3'
     },
 }
 COLLATERAL_TOKEN_DECIMALS = 6
