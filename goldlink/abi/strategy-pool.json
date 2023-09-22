@@ -1,0 +1,666 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "allowedAsset_",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "strategyNumber_",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "totalValueLockedCap_",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "percentAllocation",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sharesMinted",
+        "type": "uint256"
+      }
+    ],
+    "name": "EnrollFunds",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "onBehalfOf",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "interest",
+        "type": "uint256"
+      }
+    ],
+    "name": "HarvestInterest",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "previousOwner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "OwnershipTransferred",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "onBehalfOf",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "unenrolledStrategyAssets",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "interest",
+        "type": "uint256"
+      }
+    ],
+    "name": "UnenrollFunds",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "allowedAsset",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "shares",
+        "type": "uint256"
+      }
+    ],
+    "name": "convertToAssets",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "loan",
+        "type": "uint256"
+      }
+    ],
+    "name": "convertToShares",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "assets",
+        "type": "uint256"
+      }
+    ],
+    "name": "depositInterest",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "assets",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "percentAllocation",
+        "type": "uint256"
+      }
+    ],
+    "name": "enrollFunds",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "shares",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "assets",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "oldAssets",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct StrategyPool.AssetChange",
+        "name": "assetChange",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "percentAllocation",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "oldPercentAllocation",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct StrategyPool.PercentAllocationChange",
+        "name": "percentAllocationChange",
+        "type": "tuple"
+      }
+    ],
+    "name": "getAllocationAndAssetsRespectingUtilization",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "assets",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "oldAssets",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct StrategyPool.AssetChange",
+        "name": "totalAssetChange",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "percentAllocation",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "oldPercentAllocation",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct StrategyPool.PercentAllocationChange",
+        "name": "percentAllocationChange",
+        "type": "tuple"
+      }
+    ],
+    "name": "getEnrolledAssetChange",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "assets",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "oldAssets",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct StrategyPool.AssetChange",
+        "name": "enrolledAssetChange",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "shares",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "strategyAssets",
+        "type": "uint256"
+      }
+    ],
+    "name": "getInterest",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "interest",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "onBehalfOf",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "strategyAssets",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "shares",
+        "type": "uint256"
+      }
+    ],
+    "name": "harvestInterest",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "interest",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "updatedShares",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "loanLoss",
+        "type": "uint256"
+      }
+    ],
+    "name": "offsetLoanLossWithInterest",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "interestOffset",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "primeBroker",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "primeBroker_",
+        "type": "address"
+      }
+    ],
+    "name": "setPrimeBroker",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "strategyNumber",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalEnrolledFunds",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalInterest",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalLoanAssets",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalShares",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalValueLockedCap",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "onBehalfOf",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "strategyAssetsBeingUnenrolled",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "shares",
+        "type": "uint256"
+      }
+    ],
+    "name": "unenrollFunds",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "interest",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "unutilizedFunds",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "loanLoss",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "shareBurn",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateBalanceForLoanLoss",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "newTotalValueLockedCap",
+        "type": "uint256"
+      }
+    ],
+    "name": "updateTotalValueLockedCap",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "funds",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "isIncreasing",
+        "type": "bool"
+      }
+    ],
+    "name": "updateUtilization",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "utilizedFunds",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "assets",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "oldAssets",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct StrategyPool.AssetChange",
+        "name": "assetChange",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "percentAllocation",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "oldPercentAllocation",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct StrategyPool.PercentAllocationChange",
+        "name": "percentAllocationChange",
+        "type": "tuple"
+      }
+    ],
+    "name": "verifyStrategyAllocationChangeRespectsUtilization",
+    "outputs": [],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
