@@ -2,13 +2,13 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "allowedAsset_",
+        "internalType": "contract IERC20",
+        "name": "allowedAsset",
         "type": "address"
       },
       {
         "internalType": "contract AddressManager",
-        "name": "addressManager_",
+        "name": "addressManager",
         "type": "address"
       }
     ],
@@ -241,7 +241,7 @@
   },
   {
     "inputs": [],
-    "name": "addressManager",
+    "name": "addressManager_",
     "outputs": [
       {
         "internalType": "contract AddressManager",
@@ -254,10 +254,10 @@
   },
   {
     "inputs": [],
-    "name": "allowedAsset",
+    "name": "allowedAsset_",
     "outputs": [
       {
-        "internalType": "address",
+        "internalType": "contract IERC20",
         "name": "",
         "type": "address"
       }
@@ -529,7 +529,7 @@
   },
   {
     "inputs": [],
-    "name": "nonfungibleReceiptManager",
+    "name": "nonfungibleReceiptManager_",
     "outputs": [
       {
         "internalType": "contract NonfungibleReceiptManager",
@@ -555,7 +555,7 @@
   },
   {
     "inputs": [],
-    "name": "pauseManager",
+    "name": "pauseManager_",
     "outputs": [
       {
         "internalType": "contract PauseManager",
@@ -575,7 +575,7 @@
   },
   {
     "inputs": [],
-    "name": "sharedFundsManager",
+    "name": "sharedFundsManager_",
     "outputs": [
       {
         "internalType": "contract SharedFundsManager",

@@ -4,10 +4,10 @@ LONG_DESCRIPTION = open('README.md', 'r').read()
 
 REQUIREMENTS = [
     'cytoolz==0.12.1',
-    'eth_keys==0.4.0',
-    'eth-account>=0.7.0',
-    'mpmath==1.3.0',
-    'web3>=6.0.0',
+    'eth_keys',
+    'eth-account>=0.4.0,<0.6.0',
+    'mpmath==1.0.0',
+    'web3>=5.0.0,<6.0.0',
 ]
 
 setup(
