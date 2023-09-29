@@ -22,24 +22,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "primeBroker",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "activeManager",
-        "type": "address"
-      }
-    ],
-    "name": "addActiveManagerForPrimeBroker",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "newStrategyPool",
         "type": "address"
       },
@@ -158,7 +140,7 @@
   },
   {
     "inputs": [],
-    "name": "nonfungibleReceiptManager",
+    "name": "nonfungibleReceiptManager_",
     "outputs": [
       {
         "internalType": "address",
@@ -171,7 +153,7 @@
   },
   {
     "inputs": [],
-    "name": "omnipool",
+    "name": "omnipool_",
     "outputs": [
       {
         "internalType": "address",
@@ -197,7 +179,7 @@
   },
   {
     "inputs": [],
-    "name": "pauseManager",
+    "name": "pauseManager_",
     "outputs": [
       {
         "internalType": "address",
@@ -210,7 +192,7 @@
   },
   {
     "inputs": [],
-    "name": "primeBrokerManager",
+    "name": "primeBrokerManager_",
     "outputs": [
       {
         "internalType": "address",
@@ -232,7 +214,25 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "nonfungibleReceiptManager_",
+        "name": "primeBroker",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "activeManager",
+        "type": "address"
+      }
+    ],
+    "name": "setActiveManagerForPrimeBroker",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "nonfungibleReceiptManager",
         "type": "address"
       }
     ],
@@ -245,7 +245,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "omnipool_",
+        "name": "omnipool",
         "type": "address"
       }
     ],
@@ -258,7 +258,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "pauseManager_",
+        "name": "pauseManager",
         "type": "address"
       }
     ],
@@ -271,7 +271,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "primeBrokerManager_",
+        "name": "primeBrokerManager",
         "type": "address"
       }
     ],
@@ -284,7 +284,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "sharedFundsManager_",
+        "name": "sharedFundsManager",
         "type": "address"
       }
     ],
@@ -297,7 +297,7 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "treasury_",
+        "name": "treasury",
         "type": "address"
       }
     ],
@@ -308,7 +308,7 @@
   },
   {
     "inputs": [],
-    "name": "sharedFundsManager",
+    "name": "sharedFundsManager_",
     "outputs": [
       {
         "internalType": "address",
@@ -334,7 +334,7 @@
   },
   {
     "inputs": [],
-    "name": "treasury",
+    "name": "treasury_",
     "outputs": [
       {
         "internalType": "address",
