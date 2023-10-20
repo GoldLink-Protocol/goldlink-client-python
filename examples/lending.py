@@ -34,7 +34,7 @@ client.writer.wait_for_transaction(transaction2)
 print("Approved")
 
 # Lend to a single strategy.
-transaction = client.writer.execute_new_supply(
+transaction = client.writer.execute_open_position(
     LEND_AMOUNT,
     [strategies[0]], [1 * 10 ** 18],
     ETHEREUM_ADDRESS,
@@ -43,5 +43,5 @@ client.writer.wait_for_transaction(transaction)
 
 # Verify lending succeeded.
 print(client.writer.erc20.functions.balanceOf(omnipool).call())
-print(client.reader.get_receipt_information(1))
+print(client.reader.get_position(1))
 print(client.reader.get_total_enrolled_funds(strategies[0]))

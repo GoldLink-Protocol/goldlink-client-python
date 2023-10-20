@@ -21,10 +21,6 @@ class Reader(ContractHandler):
             Constants.ADDRESS_MANAGER_ABI,
         )
         self.omnipool = self.get_contract(self.get_omnipool(), Constants.OMNIPOOL_ABI)
-        self.nft_manager = self.get_contract(
-            self.omnipool.functions.nonfungibleReceiptManager_().call(),
-            Constants.NONFUNGIBLE_RECEIPT_MANAGER,
-        )
 
         # Initialize mapping of strategy pool addresses to their contract.
         self.strategy_pools = {}
@@ -64,7 +60,7 @@ class Reader(ContractHandler):
 
         :returns: string
         '''
-        return self.omnipool.functions.allowedAsset_().call()
+        return self.omnipool.functions.PROTOCOL_ASSET().call()
 
     # -----------------------------------------------------------
     # Strategy Pool Querying Functions
@@ -92,17 +88,17 @@ class Reader(ContractHandler):
         ].functions.totalEnrolledFunds_().call()
 
     # -----------------------------------------------------------
-    # Nonfungible Receipt Manager Querying Functions
+    # OmniPool Querying Functions
     # -----------------------------------------------------------
 
-    def get_receipt_information(self, token_id):
+    def get_position(self, token_id):
         '''
         Get receipt information for a token.
 
         :param token_id: required
         :type token_id: integer
 
-        :returns: integer
+        :returns: position
         '''
-        return self.nft_manager.functions.getReceipt(token_id).call()
+        return self.omnipool.functions.getPosition(token_id).call()
     

@@ -140,19 +140,6 @@
   },
   {
     "inputs": [],
-    "name": "nonfungibleReceiptManager_",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "omnipool_",
     "outputs": [
       {
@@ -232,19 +219,6 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "nonfungibleReceiptManager",
-        "type": "address"
-      }
-    ],
-    "name": "setNonFungibleReceiptManager",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
         "name": "omnipool",
         "type": "address"
       }
@@ -297,6 +271,19 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "strategyFactory",
+        "type": "address"
+      }
+    ],
+    "name": "setStrategyFactory",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "treasury",
         "type": "address"
       }
@@ -309,6 +296,19 @@
   {
     "inputs": [],
     "name": "sharedFundsManager_",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "strategyFactory_",
     "outputs": [
       {
         "internalType": "address",

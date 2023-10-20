@@ -3,17 +3,104 @@
     "inputs": [
       {
         "internalType": "contract IERC20",
-        "name": "allowedAsset",
+        "name": "protocolAsset",
         "type": "address"
       },
       {
-        "internalType": "contract AddressManager",
+        "internalType": "contract IAddressManager",
         "name": "addressManager",
         "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "approved",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Approval",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "approved",
+        "type": "bool"
+      }
+    ],
+    "name": "ApprovalForAll",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "onBehalfOf",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "strategyCount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "interest",
+        "type": "uint256"
+      }
+    ],
+    "name": "DecreasePosition",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -68,75 +155,7 @@
         "type": "uint256"
       }
     ],
-    "name": "ExecuteHarvestInterest",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "onBehalfOf",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "strategyCount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "interest",
-        "type": "uint256"
-      }
-    ],
-    "name": "ExecuteModify",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "onBehalfOf",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "strategyCount",
-        "type": "uint256"
-      }
-    ],
-    "name": "ExecuteNewSupply",
+    "name": "HarvestPosition",
     "type": "event"
   },
   {
@@ -157,48 +176,11 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "amount",
+        "name": "newlyProvidedLiquidity",
         "type": "uint256"
       }
     ],
-    "name": "ExecuteSupply",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "sender",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "onBehalfOf",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "strategyCount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "interest",
-        "type": "uint256"
-      }
-    ],
-    "name": "ExecuteWithdraw",
+    "name": "IncreasePosition",
     "type": "event"
   },
   {
@@ -226,6 +208,74 @@
       {
         "indexed": true,
         "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "onBehalfOf",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "strategyCount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "interest",
+        "type": "uint256"
+      }
+    ],
+    "name": "ModifyPosition",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "onBehalfOf",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "providedLiquidity",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "strategyCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "OpenPosition",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
         "name": "previousOwner",
         "type": "address"
       },
@@ -240,11 +290,36 @@
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Transfer",
+    "type": "event"
+  },
+  {
     "inputs": [],
-    "name": "addressManager_",
+    "name": "ADDRESS_MANAGER",
     "outputs": [
       {
-        "internalType": "contract AddressManager",
+        "internalType": "contract IAddressManager",
         "name": "",
         "type": "address"
       }
@@ -254,12 +329,75 @@
   },
   {
     "inputs": [],
-    "name": "allowedAsset_",
+    "name": "PAUSE_MANAGER",
+    "outputs": [
+      {
+        "internalType": "contract IPauseManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PROTOCOL_ASSET",
     "outputs": [
       {
         "internalType": "contract IERC20",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "SHARED_FUNDS_MANAGER",
+    "outputs": [
+      {
+        "internalType": "contract ISharedFundsManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "approve",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      }
+    ],
+    "name": "balanceOf",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -294,9 +432,48 @@
         "internalType": "address",
         "name": "onBehalfOf",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "decreaseAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "useSoftWithdrawal",
+        "type": "bool"
       }
     ],
-    "name": "executeHarvestInterest",
+    "name": "executeDecreasePosition",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "onBehalfOf",
+        "type": "address"
+      }
+    ],
+    "name": "executeHarvestPosition",
     "outputs": [
       {
         "internalType": "uint256",
@@ -304,6 +481,24 @@
         "type": "uint256"
       }
     ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "executeIncreasePosition",
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -342,7 +537,7 @@
         "type": "tuple"
       }
     ],
-    "name": "executeModify",
+    "name": "executeModifyPosition",
     "outputs": [
       {
         "internalType": "uint256",
@@ -388,7 +583,7 @@
         "type": "tuple"
       }
     ],
-    "name": "executeNewSupply",
+    "name": "executeOpenPosition",
     "outputs": [
       {
         "internalType": "uint256",
@@ -403,18 +598,79 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "amount",
+        "name": "tokenId",
         "type": "uint256"
-      },
+      }
+    ],
+    "name": "getApproved",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       }
     ],
-    "name": "executeSupply",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "getPosition",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "providedLiquidity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "sharesPerStrategy",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "uint256[]",
+            "name": "percentAllocations",
+            "type": "uint256[]"
+          },
+          {
+            "internalType": "address[]",
+            "name": "strategies",
+            "type": "address[]"
+          }
+        ],
+        "internalType": "struct Lenders.Position",
+        "name": "position",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getPositionProvidedLiquidity",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "providedLiquidity",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -426,34 +682,38 @@
       },
       {
         "internalType": "address",
-        "name": "onBehalfOf",
+        "name": "strategy",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "withdrawalAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bool",
-        "name": "useSoftWithdrawal",
-        "type": "bool"
       }
     ],
-    "name": "executeWithdraw",
+    "name": "getPositionStrategyAllocatedLiquidity",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "allocatedLiquidity",
         "type": "uint256"
-      },
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
       }
     ],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "strategy",
+        "type": "address"
+      }
+    ],
+    "name": "getStrategyTokenIds",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "tokenIds",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -486,7 +746,7 @@
         "type": "tuple"
       }
     ],
-    "name": "getSupersetAllocationsAndSharesForReceipt",
+    "name": "getSupersetAllocationsAndSharesForPosition",
     "outputs": [
       {
         "internalType": "uint256[]",
@@ -506,9 +766,33 @@
             "type": "uint256[]"
           }
         ],
-        "internalType": "struct StrategyPool.PercentAllocationChangeArrays",
+        "internalType": "struct IStrategyPool.PercentAllocationChangeArrays",
         "name": "realizedAllocationChange",
         "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      }
+    ],
+    "name": "isApprovedForAll",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -529,12 +813,12 @@
   },
   {
     "inputs": [],
-    "name": "nonfungibleReceiptManager_",
+    "name": "name",
     "outputs": [
       {
-        "internalType": "contract NonfungibleReceiptManager",
+        "internalType": "string",
         "name": "",
-        "type": "address"
+        "type": "string"
       }
     ],
     "stateMutability": "view",
@@ -554,11 +838,17 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "pauseManager_",
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "ownerOf",
     "outputs": [
       {
-        "internalType": "contract PauseManager",
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -574,16 +864,146 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "sharedFundsManager_",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "operator",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "approved",
+        "type": "bool"
+      }
+    ],
+    "name": "setApprovalForAll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "supportsInterface",
     "outputs": [
       {
-        "internalType": "contract SharedFundsManager",
+        "internalType": "bool",
         "name": "",
-        "type": "address"
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokenURI",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "transferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -595,6 +1015,52 @@
       }
     ],
     "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "updatedProvidedLiquidity",
+        "type": "uint256"
+      }
+    ],
+    "name": "updatePositionProvidedLiquidity",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "strategy",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "updatedShares",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "updatedAllocation",
+        "type": "uint256"
+      }
+    ],
+    "name": "updatePositionStrategyInfo",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -615,6 +1081,25 @@
     "name": "updateTotalValueLockedCap",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "verifyPositionExists",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]

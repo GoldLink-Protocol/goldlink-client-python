@@ -2,14 +2,9 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "allowedAsset",
+        "internalType": "contract IERC20",
+        "name": "protocolAsset",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "strategyNumber",
-        "type": "uint256"
       },
       {
         "internalType": "uint256",
@@ -26,7 +21,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "percentAllocation",
+        "name": "assets",
         "type": "uint256"
       },
       {
@@ -104,7 +99,7 @@
   },
   {
     "inputs": [],
-    "name": "allowedAsset_",
+    "name": "PROTOCOL_ASSET",
     "outputs": [
       {
         "internalType": "contract IERC20",
@@ -172,11 +167,6 @@
         "internalType": "uint256",
         "name": "assets",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "percentAllocation",
-        "type": "uint256"
       }
     ],
     "name": "enrollFunds",
@@ -205,7 +195,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct StrategyPool.AssetChange",
+        "internalType": "struct IStrategyPool.AssetChange",
         "name": "assetChange",
         "type": "tuple"
       },
@@ -222,7 +212,7 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct StrategyPool.PercentAllocationChange",
+        "internalType": "struct IStrategyPool.PercentAllocationChange",
         "name": "percentAllocationChange",
         "type": "tuple"
       }
@@ -241,66 +231,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "assets",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "oldAssets",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct StrategyPool.AssetChange",
-        "name": "totalAssetChange",
-        "type": "tuple"
-      },
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "percentAllocation",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "oldPercentAllocation",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct StrategyPool.PercentAllocationChange",
-        "name": "percentAllocationChange",
-        "type": "tuple"
-      }
-    ],
-    "name": "getEnrolledAssetChange",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "assets",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "oldAssets",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct StrategyPool.AssetChange",
-        "name": "enrolledAssetChange",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -424,19 +354,6 @@
     "name": "setPrimeBroker",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "strategyNumber_",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -636,25 +553,8 @@
             "type": "uint256"
           }
         ],
-        "internalType": "struct StrategyPool.AssetChange",
+        "internalType": "struct IStrategyPool.AssetChange",
         "name": "assetChange",
-        "type": "tuple"
-      },
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "percentAllocation",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "oldPercentAllocation",
-            "type": "uint256"
-          }
-        ],
-        "internalType": "struct StrategyPool.PercentAllocationChange",
-        "name": "percentAllocationChange",
         "type": "tuple"
       }
     ],
