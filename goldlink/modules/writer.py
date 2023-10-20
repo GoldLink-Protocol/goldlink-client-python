@@ -65,16 +65,16 @@ class Writer(ContractHandler):
             options=send_options,
         )
 
-    def execute_new_supply(
+    def execute_open_position(
         self,
         amount,
         strategies,
-        percent_allocations,
+        strategy_allocations,
         on_behalf_of=None,
         send_options=None,
     ):
         '''
-        Execute a new supply, minting a receipt and establishing allocations
+        Execute open position, minting a receipt and establishing allocations
         in one or more strategies for enrolled funds (amount).
 
         :param amount: required
@@ -83,7 +83,7 @@ class Writer(ContractHandler):
         :param strategies: required
         :type strategies: []string
 
-        :param percent_allocations: required
+        :param strategy_allocations: required
         :type percent_allocations: []integer
 
         :param send_options: optional
@@ -97,10 +97,10 @@ class Writer(ContractHandler):
         :raises: TransactionReverted
         '''
         return self.send_transaction(
-            method=self.omnipool.functions.executeNewSupply(
+            method=self.omnipool.functions.executeOpenPosition(
                 amount,
                 on_behalf_of or self.default_address,
-                (strategies, percent_allocations)
+                (strategies, strategy_allocations)
             ),
             options=send_options,
         )
