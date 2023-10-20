@@ -64,7 +64,7 @@ class Client(object):
 
         # Initialize the reader module. Other modules are initialized on
         # demand, if the necessary configuration options were provided.
-        self._reader = Reader(web3, network_id)
+        self._reader = Reader(self.web3, self.network_id)
         self._writer = None
 
     @property
