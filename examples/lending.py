@@ -6,11 +6,7 @@ Usage: python -m examples.lending
 from web3 import Web3
 from goldlink import Client
 from goldlink.constants import NETWORK_ID_ANVIL
-
-# Anvil URL, address, private key.
-WEB_PROVIDER_URL = 'http://127.0.0.1:8545'
-ETHEREUM_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
-ETHEREUM_PRIVATE_KEY = '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'
+from examples.constants import WEB_PROVIDER_URL, ETHEREUM_ADDRESS, ETHEREUM_PRIVATE_KEY
 
 # Amount to lend.
 LEND_AMOUNT = 10000
