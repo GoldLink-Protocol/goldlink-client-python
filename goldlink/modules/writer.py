@@ -1,20 +1,23 @@
+"""Module providing access to methods for writing to GoldLink Contracts."""
+
 from goldlink.modules.contract_handler import ContractHandler
 import goldlink.constants as Constants
 from goldlink.errors import TransactionReverted
 
 class Writer(ContractHandler):
+
     '''
     Module for sending transactions to GoldLink Protocol.
     '''
 
     def __init__(
-      self,
-      web3,
-      erc20Address,
-      omnipool,
-      private_key,
-      default_address,
-      send_options,
+        self,
+        web3,
+        erc_20_address,
+        omnipool,
+        private_key,
+        default_address,
+        send_options,
     ):
         ContractHandler.__init__(self, web3)
 
@@ -24,11 +27,10 @@ class Writer(ContractHandler):
         self.omnipool = omnipool
 
         # Get contracts from ABI.
-        self.erc20 = self.get_contract(erc20Address, Constants.ERC20)
+        self.erc20 = self.get_contract(erc_20_address, Constants.ERC20)
 
         # Initialize mapping of next nonce per address.
         self._next_nonce_for_address = {}
-
 
 
     # -----------------------------------------------------------

@@ -1,5 +1,8 @@
+"""Module providing access to methods for reading from GoldLink Contracts."""
+
 import goldlink.constants as Constants
 from goldlink.modules.contract_handler import ContractHandler
+from goldlink.errors import GoldLinkError
 
 class Reader(ContractHandler):
     '''
@@ -34,9 +37,12 @@ class Reader(ContractHandler):
         Get address of the Address Manager.
 
         :returns: string
+
+        :raises: GoldLinkError
         '''
         if self.network_id == Constants.NETWORK_ID_ANVIL:
             return  Constants.CONTRACTS[Constants.ADDRESS_MANAGER][Constants.NETWORK_ID_ANVIL]
+        raise GoldLinkError("Invalid network ID")
 
     def get_omnipool(self):
         '''

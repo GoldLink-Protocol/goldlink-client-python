@@ -1,3 +1,5 @@
+"""The GoldLink Client for interacting with the protocol."""
+
 from web3 import Web3
 
 from goldlink.modules.reader import Reader
@@ -85,7 +87,7 @@ class Client(object):
                 self._writer = Writer(
                     web3=self.web3,
                     omnipool=self.reader.omnipool,
-                    erc20Address=self.reader.get_omnipool_allowed_address(),
+                    erc_20_address=self.reader.get_omnipool_allowed_address(),
                     private_key=private_key,
                     default_address=self.default_address,
                     send_options=self.send_options,
