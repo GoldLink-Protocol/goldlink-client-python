@@ -1,3 +1,5 @@
+"""The Errors thrown by the GoldLink Client."""
+
 class GoldLinkError(Exception):
     """Base error class for all exceptions raised in this library.
     Will never be raised naked; more specific subclasses of this exception will

@@ -1,3 +1,5 @@
+"""Module for handling all interactions with GoldLink Contracts."""
+
 import json
 import os
 

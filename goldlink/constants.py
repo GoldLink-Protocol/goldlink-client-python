@@ -1,3 +1,5 @@
+"""Constants used in the GoldLink Client."""
+
 # ------------ Arbitrum Network IDs ------------
 NETWORK_ID_MAINNET = 42161
 NETWORK_ID_GOERLI = 421613
