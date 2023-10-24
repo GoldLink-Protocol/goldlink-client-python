@@ -41,7 +41,9 @@ position_transaction = client.writer.execute_open_position(
     [1 * 10 ** 18],
     ETHEREUM_ADDRESS,
 )
-client.writer.wait_for_transaction(position_transaction)
+receipt = client.writer.wait_for_transaction(position_transaction)
+openPositionEvent = client.event_handler.handle_open_position(receipt)
+print("Open Position Event: ", openPositionEvent)
 
 # Verify lending succeeded.
 position = client.reader.get_position(1)

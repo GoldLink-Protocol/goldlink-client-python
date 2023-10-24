@@ -263,3 +263,5 @@ class Writer(ContractHandler):
         if transaction_receipt['status'] == 0:
             raise TransactionReverted(transaction_receipt)
         
+        return transaction_receipt
+        
