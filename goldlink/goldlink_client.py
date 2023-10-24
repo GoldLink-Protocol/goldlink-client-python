@@ -3,6 +3,7 @@
 from web3 import Web3
 
 from goldlink.modules.reader import Reader
+from goldlink.modules.event_handler import EventHandler
 from goldlink.modules.writer import Writer
 from goldlink.constants import NETWORK_ID_MAINNET, DEFAULT_API_TIMEOUT
 from goldlink.signing.signer import SignWithWeb3, SignWithKey
@@ -64,9 +65,10 @@ class Client(object):
             network_id or self.network_id or NETWORK_ID_MAINNET
         )
 
-        # Initialize the reader module. Other modules are initialized on
+        # Initialize the reader and event handler modules. Other modules are initialized on
         # demand, if the necessary configuration options were provided.
         self._reader = Reader(self.web3, self.network_id)
+        self._event_handler = EventHandler(self._reader.omnipool)
         self._writer = None
 
     @property
@@ -75,6 +77,14 @@ class Client(object):
         Get the reader module, used for reading from protocol.
         '''
         return self._reader
+    
+    @property
+    def event_handler(self):
+        '''
+        Get the event handler module, used for handling events emitted from the protocol.
+        '''
+        return self._event_handler
+
 
     @property
     def writer(self):
