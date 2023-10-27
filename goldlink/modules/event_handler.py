@@ -9,8 +9,16 @@ class EventHandler(object):
     def __init__(
             self,
             omnipool,
+            prime_broker_manager,
     ):
         self.omnipool = omnipool
+        self.prime_broker_manager = prime_broker_manager
+
+
+    # -----------------------------------------------------------
+    # Lending Events
+    # -----------------------------------------------------------
+
 
     def handle_open_position(self, transaction_receipt):
         '''
@@ -23,6 +31,27 @@ class EventHandler(object):
         '''
         return handle_event(self.omnipool.events.OpenPosition().processReceipt(transaction_receipt))
     
+
+    # -----------------------------------------------------------
+    # Borrowing Events
+    # -----------------------------------------------------------
+
+    def handle_borrow(self, transaction_receipt):
+        '''
+        Handle and return event emitted when borrowing.
+
+        :param transaction_receipt: required
+        :type transaction_receipt: transactionReceipt
+
+        :returns: AttributeDict
+        '''
+        return handle_event(self.prime_broker_manager.events.Borrow().processReceipt(transaction_receipt))
+
+
+# -----------------------------------------------------------
+# Utilities
+# -----------------------------------------------------------
+
 def handle_event(event):
     '''
     Handle parsing a generic event.
