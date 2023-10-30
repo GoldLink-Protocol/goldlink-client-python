@@ -11,7 +11,7 @@ from goldlink import Client
 from goldlink.constants import NETWORK_ID_ANVIL
 from examples.constants import WEB_PROVIDER_URL, ETHEREUM_ADDRESS, ETHEREUM_PRIVATE_KEY
 
-# Amount to borrow
+# Amount to borrow.
 BORROW_AMOUNT = 500
 
 # Initialize client.
