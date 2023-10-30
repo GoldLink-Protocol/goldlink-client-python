@@ -34,6 +34,9 @@ class Writer(ContractHandler):
         # Initialize mapping of next nonce per address.
         self._next_nonce_for_address = {}
 
+        # Initialize mapping of prime brokers per address.
+        self.prime_brokers = {}
+
 
     # -----------------------------------------------------------
     # General Transactions
@@ -140,6 +143,21 @@ class Writer(ContractHandler):
             method=self.prime_broker_manager.functions.executeBorrow(
                 prime_broker,
                 (collateral, loan)
+            )
+        )
+
+    # TODO remove
+    def update_for_strategy_performance(self, prime_broker, asset_change, is_profit):
+        if prime_broker not in self.prime_brokers:
+            self.prime_brokers[prime_broker] = self.get_contract(
+                prime_broker, 
+                Constants.PRIME_BROKER_ABI,
+            )
+            
+        return self.send_transaction(
+            method=self.prime_brokers[prime_broker].functions.updateForStrategyPerformance(
+                asset_change, 
+                is_profit,
             )
         )
 

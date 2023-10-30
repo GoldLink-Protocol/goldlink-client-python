@@ -28,6 +28,8 @@ class Reader(ContractHandler):
             self.get_prime_broker_manager(), 
             Constants.PRIME_BROKER_MANAGER_ABI,
         )
+        self.strategy_pools = {}
+        self.prime_brokers = {}
 
     # -----------------------------------------------------------
     # Address Querying Functions
@@ -131,7 +133,8 @@ class Reader(ContractHandler):
     
     def get_borrower_holdings(self, prime_broker, borrower):
         '''
-        Get borrower holdings in a prime broker.
+        Get borrower holdings in a prime broker. Does not account
+        for profit or loss.
 
         :param prime_broker: required
         :type prime_broker: address
@@ -141,8 +144,49 @@ class Reader(ContractHandler):
 
         :returns: BorrowerHoldings
         '''
-        prime_broker = self.get_contract(
-            prime_broker, 
-            Constants.PRIME_BROKER_ABI,
-        )
-        return prime_broker.functions.getBorrowerHoldings(borrower).call()
+        if prime_broker not in self.prime_brokers:
+            self.prime_brokers[prime_broker] = self.get_contract(
+                prime_broker, 
+                Constants.PRIME_BROKER_ABI,
+            )
+
+        return self.prime_brokers[prime_broker].functions.getBorrowerHoldings(borrower).call()
+
+    def get_health_score(self, prime_broker, borrower_holding):
+        '''
+        Get borrower holdings health score in a prime broker.
+
+        :param prime_broker: required
+        :type prime_broker: address
+
+        :param borrower_holding: required
+        :type borrower_holding: BorrowerHoldings
+
+        :returns: integer
+        '''
+        if prime_broker not in self.prime_brokers:
+            self.prime_brokers[prime_broker] = self.get_contract(
+                prime_broker, 
+                Constants.PRIME_BROKER_ABI,
+            )
+
+        return self.prime_brokers[prime_broker].functions.getHealthScore(borrower_holding).call()
+
+
+    def get_prime_broker_share_price(self, prime_broker):
+        '''
+        Get prime broker share price.
+
+        :param prime_broker: required
+        :type prime_broker: address
+
+        :returns: float
+        '''
+        if prime_broker not in self.prime_brokers:
+            self.prime_brokers[prime_broker] = self.get_contract(
+                prime_broker, 
+                Constants.PRIME_BROKER_ABI,
+            )
+
+        one_thousand_shares_of_asset = self.prime_brokers[prime_broker].functions.convertToAssets(1000).call()
+        return one_thousand_shares_of_asset / 1000
