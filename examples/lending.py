@@ -1,4 +1,5 @@
-'''Example for lending. Assumes anvil is running.
+'''
+Example for lending. Assumes anvil is running.
 
 Usage: python -m examples.lending
 '''
@@ -27,7 +28,7 @@ omnipool = client.reader.get_omnipool()
 before_omnipool_balance = client.writer.erc20.functions.balanceOf(omnipool).call()
 before_enrolled_funds = client.reader.get_total_enrolled_funds(strategies[0])
 
-# Set approval for OmniPool to pull funds from this wallet
+# Set approval for OmniPool to pull funds from this wallet.
 print("Awaiting lending approval")
 approve_transaction = client.writer.approve_address(omnipool, LEND_AMOUNT * 10)
 client.writer.wait_for_transaction(approve_transaction)

@@ -15,6 +15,7 @@ class Writer(ContractHandler):
         web3,
         erc_20_address,
         omnipool,
+        prime_broker_manager,
         private_key,
         default_address,
         send_options,
@@ -25,6 +26,7 @@ class Writer(ContractHandler):
         self.default_address = default_address
         self.send_options = send_options
         self.omnipool = omnipool
+        self.prime_broker_manager = prime_broker_manager
 
         # Get contracts from ABI.
         self.erc20 = self.get_contract(erc_20_address, Constants.ERC20)
@@ -34,7 +36,7 @@ class Writer(ContractHandler):
 
 
     # -----------------------------------------------------------
-    # Transactions
+    # General Transactions
     # -----------------------------------------------------------
 
     def approve_address(
@@ -67,6 +69,10 @@ class Writer(ContractHandler):
             options=send_options,
         )
 
+    # -----------------------------------------------------------
+    # Lending Transactions
+    # -----------------------------------------------------------
+
     def execute_open_position(
         self,
         amount,
@@ -83,7 +89,7 @@ class Writer(ContractHandler):
         :type amount: integer
 
         :param strategies: required
-        :type strategies: []string
+        :type strategies: []address
 
         :param strategy_allocations: required
         :type percent_allocations: []integer
@@ -92,7 +98,7 @@ class Writer(ContractHandler):
         :type send_options: sendOptions
 
         :param on_behalf_of: optional
-        :type on_behalf_of: string
+        :type on_behalf_of: address
 
         :returns: transactionHash
 
@@ -105,6 +111,36 @@ class Writer(ContractHandler):
                 (strategies, strategy_allocations)
             ),
             options=send_options,
+        )
+    
+    # -----------------------------------------------------------
+    # Borrowing Transactions
+    # -----------------------------------------------------------
+
+    def execute_borrow(
+            self,
+            prime_broker,
+            collateral=0,
+            loan=0,
+    ):
+        '''
+        Execute borrow, creating or increasing a borrow balance for a specific
+        strategy.
+
+        :param prime_broker: required
+        :type prime_broker: address
+
+        :param collateral: optional
+        :type collateral: integer
+
+        :param loan: optional
+        :type loan: integer
+        '''
+        return self.send_transaction(
+            method=self.prime_broker_manager.functions.executeBorrow(
+                prime_broker,
+                (collateral, loan)
+            )
         )
 
     # -----------------------------------------------------------

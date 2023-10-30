@@ -68,7 +68,7 @@ class Client(object):
         # Initialize the reader and event handler modules. Other modules are initialized on
         # demand, if the necessary configuration options were provided.
         self._reader = Reader(self.web3, self.network_id)
-        self._event_handler = EventHandler(self._reader.omnipool)
+        self._event_handler = EventHandler(self._reader.omnipool, self._reader.prime_broker_manager)
         self._writer = None
 
     @property
@@ -97,6 +97,7 @@ class Client(object):
                 self._writer = Writer(
                     web3=self.web3,
                     omnipool=self.reader.omnipool,
+                    prime_broker_manager=self.reader.prime_broker_manager,
                     erc_20_address=self.reader.get_omnipool_allowed_address(),
                     private_key=private_key,
                     default_address=self.default_address,

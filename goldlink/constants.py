@@ -40,5 +40,7 @@ DEFAULT_API_TIMEOUT = 3000
 # ------------ GoldLink Protocol ABI Paths ------------
 ADDRESS_MANAGER_ABI = 'abi/address-manager.json'
 OMNIPOOL_ABI = 'abi/omnipool.json'
+PRIME_BROKER_MANAGER_ABI = 'abi/prime-broker-manager.json'
 STRATEGY_POOL_ABI = 'abi/strategy-pool.json'
+PRIME_BROKER_ABI = 'abi/prime-broker.json'
 ERC20 = 'abi/erc20.json'

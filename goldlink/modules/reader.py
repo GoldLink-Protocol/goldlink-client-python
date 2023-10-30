@@ -24,9 +24,10 @@ class Reader(ContractHandler):
             Constants.ADDRESS_MANAGER_ABI,
         )
         self.omnipool = self.get_contract(self.get_omnipool(), Constants.OMNIPOOL_ABI)
-
-        # Initialize mapping of strategy pool addresses to their contract.
-        self.strategy_pools = {}
+        self.prime_broker_manager = self.get_contract(
+            self.get_prime_broker_manager(), 
+            Constants.PRIME_BROKER_MANAGER_ABI,
+        )
 
     # -----------------------------------------------------------
     # Address Querying Functions
@@ -36,7 +37,7 @@ class Reader(ContractHandler):
         '''
         Get address of the Address Manager.
 
-        :returns: string
+        :returns: address
 
         :raises: GoldLinkError
         '''
@@ -48,23 +49,39 @@ class Reader(ContractHandler):
         '''
         Get address of the OmniPool.
 
-        :returns: string
+        :returns: address
         '''
         return self.address_manager.functions.omnipool_().call()
+    
+    def get_prime_broker_manager(self):
+        '''
+        Get address of the PrimeBrokerManager.
+
+        :returns: address
+        '''
+        return self.address_manager.functions.primeBrokerManager_().call()
 
     def get_strategy_pools(self):
         '''
         Get all strategy pool addresses.
 
-        :returns: []string
+        :returns: []address
         '''
         return self.address_manager.functions.getStrategyPools().call()
+    
+    def get_prime_brokers(self):
+        '''
+        Get all prime broker addresses.
+
+        :returns: []address
+        '''
+        return self.address_manager.functions.getPrimeBrokers().call()
 
     def get_omnipool_allowed_address(self):
         '''
         Get allowed asset address for OmniPool.
 
-        :returns: string
+        :returns: address
         '''
         return self.omnipool.functions.PROTOCOL_ASSET().call()
 
@@ -108,3 +125,24 @@ class Reader(ContractHandler):
         '''
         return self.omnipool.functions.getPosition(token_id).call()
     
+    # -----------------------------------------------------------
+    # Prime Broker Querying Functions
+    # -----------------------------------------------------------
+    
+    def get_borrower_holdings(self, prime_broker, borrower):
+        '''
+        Get borrower holdings in a prime broker.
+
+        :param prime_broker: required
+        :type prime_broker: address
+
+        :param borrower: required
+        :type borrower: address
+
+        :returns: BorrowerHoldings
+        '''
+        prime_broker = self.get_contract(
+            prime_broker, 
+            Constants.PRIME_BROKER_ABI,
+        )
+        return prime_broker.functions.getBorrowerHoldings(borrower).call()
