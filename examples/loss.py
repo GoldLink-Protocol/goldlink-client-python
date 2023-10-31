@@ -10,7 +10,7 @@ from goldlink.constants import NETWORK_ID_ANVIL
 from examples.constants import WEB_PROVIDER_URL, ETHEREUM_ADDRESS, ETHEREUM_PRIVATE_KEY
 
 # Amount to lose.
-LOSS_AMOUNT = 250
+LOSS_AMOUNT = 50
 
 # Initialize client.
 client = Client(
