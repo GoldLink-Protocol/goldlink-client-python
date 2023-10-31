@@ -52,7 +52,7 @@ class Writer(ContractHandler):
         Approve address to pull allowed asset funds from wallet.
 
         :param address: required
-        :type address: string
+        :type address: address
 
         :param amount: required
         :type amount: integer
@@ -67,6 +67,36 @@ class Writer(ContractHandler):
         return self.send_transaction(
             method=self.erc20.functions.approve(
                 address,
+                amount
+            ),
+            options=send_options,
+        )
+    
+    def transfer(
+        self,
+        to,
+        amount,
+        send_options=None,
+    ):
+        '''
+        Transfer the allowed asset for the GoldLink Protocol to another address.
+
+        :param to: required
+        :type to: address
+
+        :param amount: required
+        :type amount: integer
+
+        :param send_options: optional
+        :type send_options: sendOptions
+
+        :returns: transactionHash
+
+        :raises: TransactionReverted
+        '''
+        return self.send_transaction(
+            method=self.erc20.functions.transfer(
+                to,
                 amount
             ),
             options=send_options,
@@ -97,11 +127,11 @@ class Writer(ContractHandler):
         :param strategy_allocations: required
         :type percent_allocations: []integer
 
-        :param send_options: optional
-        :type send_options: sendOptions
-
         :param on_behalf_of: optional
         :type on_behalf_of: address
+
+        :param send_options: optional
+        :type send_options: sendOptions
 
         :returns: transactionHash
 
@@ -125,6 +155,7 @@ class Writer(ContractHandler):
             prime_broker,
             collateral=0,
             loan=0,
+            send_options=None,
     ):
         '''
         Execute borrow, creating or increasing a borrow balance for a specific
@@ -138,12 +169,20 @@ class Writer(ContractHandler):
 
         :param loan: optional
         :type loan: integer
+
+        :param send_options: optional
+        :type send_options: sendOptions
+
+        :returns: transactionHash
+
+        :raises: TransactionReverted
         '''
         return self.send_transaction(
             method=self.prime_broker_manager.functions.executeBorrow(
                 prime_broker,
                 (collateral, loan)
-            )
+            ),
+            options=send_options,
         )
 
     # TODO remove
