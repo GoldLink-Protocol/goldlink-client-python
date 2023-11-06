@@ -360,19 +360,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "SHARED_FUNDS_MANAGER",
-    "outputs": [
-      {
-        "internalType": "contract ISharedFundsManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
