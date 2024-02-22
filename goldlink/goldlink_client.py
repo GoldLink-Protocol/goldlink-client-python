@@ -7,6 +7,7 @@ from goldlink.modules.event_handler import EventHandler
 from goldlink.modules.writer import Writer
 from goldlink.constants import NETWORK_ID_MAINNET, DEFAULT_API_TIMEOUT
 from goldlink.signing.signer import SignWithWeb3, SignWithKey
+from goldlink.modules.abi_manager import AbiManager
 
 class Client(object):
     '''
@@ -26,6 +27,9 @@ class Client(object):
         web3_provider=None,
         host=None,
     ):
+        # Create ABI manager all modules will share.
+        self.abi_manager = AbiManager()
+        
         # Set API parameters if input.
         self.send_options = send_options or {}
         self.api_timeout = api_timeout or DEFAULT_API_TIMEOUT
@@ -67,8 +71,13 @@ class Client(object):
 
         # Initialize the reader and event handler modules. Other modules are initialized on
         # demand, if the necessary configuration options were provided.
-        self._reader = Reader(self.web3, self.network_id)
-        self._event_handler = EventHandler(self._reader.omnipool, self._reader.prime_broker_manager)
+        self._reader = Reader(
+            web3=self.web3, 
+            network_id=self.network_id, 
+            default_address=self.default_address,
+            abi_manager=self.abi_manager
+        )
+        self._event_handler = EventHandler(self.abi_manager)
         self._writer = None
 
     @property
@@ -96,9 +105,7 @@ class Client(object):
             if self.web3 and private_key:
                 self._writer = Writer(
                     web3=self.web3,
-                    omnipool=self.reader.omnipool,
-                    prime_broker_manager=self.reader.prime_broker_manager,
-                    erc_20_address=self.reader.get_omnipool_allowed_address(),
+                    abi_manager=self.abi_manager,
                     private_key=private_key,
                     default_address=self.default_address,
                     send_options=self.send_options,

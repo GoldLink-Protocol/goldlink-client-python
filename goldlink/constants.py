@@ -12,7 +12,6 @@ SIGNATURE_TYPE_HEXADECIMAL = 2
 
 # ------------ Assets ------------
 ASSET_USDC = 'USDC'
-ADDRESS_MANAGER = 'ADDRESS_MANAGER'
 
 # ------------ Transactions ------------
 DEFAULT_GAS_AMOUNT = 2500000
@@ -26,9 +25,6 @@ CONTRACTS = {
         NETWORK_ID_MAINNET: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
         NETWORK_ID_GOERLI: '0xfd064A18f3BF249cf1f87FC203E90D8f650f2d63',
         NETWORK_ID_ANVIL: '0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE'
-    },
-    ADDRESS_MANAGER: {
-        NETWORK_ID_ANVIL: '0x3Aa5ebB10DC797CAC828524e59A333d0A371443c'
     }
 }
 COLLATERAL_TOKEN_DECIMALS = 6
@@ -38,9 +34,8 @@ DEFAULT_GAS_PRICE_ADDITION = 3
 DEFAULT_API_TIMEOUT = 3000
 
 # ------------ GoldLink Protocol ABI Paths ------------
-ADDRESS_MANAGER_ABI = 'abi/address-manager.json'
-OMNIPOOL_ABI = 'abi/omnipool.json'
-PRIME_BROKER_MANAGER_ABI = 'abi/prime-broker-manager.json'
-STRATEGY_POOL_ABI = 'abi/strategy-pool.json'
-PRIME_BROKER_ABI = 'abi/prime-broker.json'
 ERC20 = 'abi/erc20.json'
+GMX_FRF_STRATEGY_ACCOUNT_ABI = 'abi/gmx-frf-strategy-account.json'
+STRATEGY_ACCOUNT_ABI = 'abi/strategy-account.json'
+STRATEGY_BANK_ABI = 'abi/strategy-bank.json'
+STRATEGY_RESERVE_ABI = 'abi/strategy-reserve.json'

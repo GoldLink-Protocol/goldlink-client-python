@@ -1,5 +1,7 @@
 """Module providing access to methods for handling events from GoldLink Contracts."""
 
+from goldlink.modules.abi_manager import AbiManager
+
 class EventHandler(object):
 
     '''
@@ -7,12 +9,10 @@ class EventHandler(object):
     '''
 
     def __init__(
-            self,
-            omnipool,
-            prime_broker_manager,
+        self,
+        abi_manager: AbiManager
     ):
-        self.omnipool = omnipool
-        self.prime_broker_manager = prime_broker_manager
+        self.abi_manager = abi_manager
 
 
     # -----------------------------------------------------------
@@ -20,34 +20,22 @@ class EventHandler(object):
     # -----------------------------------------------------------
 
 
-    def handle_open_position(self, transaction_receipt):
+    def handle_deposit(self, strategy_reserve, transaction_receipt):
         '''
         Handle and return event emitted when opening a position.
 
+        :param strategy_reserve: required
+        :type strategy_reserve: address
+
         :param transaction_receipt: required
         :type transaction_receipt: transactionReceipt
 
         :returns: AttributeDict
         '''
-        return handle_event(self.omnipool.events.OpenPosition().processReceipt(transaction_receipt))
+        strategy_reserve_abi = self.abi_manager.get_strategy_reserve(strategy_reserve)
+
+        return handle_event(strategy_reserve_abi.events.Deposit().processReceipt(transaction_receipt))
     
-
-    # -----------------------------------------------------------
-    # Borrowing Events
-    # -----------------------------------------------------------
-
-    def handle_borrow(self, transaction_receipt):
-        '''
-        Handle and return event emitted when borrowing.
-
-        :param transaction_receipt: required
-        :type transaction_receipt: transactionReceipt
-
-        :returns: AttributeDict
-        '''
-        return handle_event(self.prime_broker_manager.events.Borrow().processReceipt(transaction_receipt))
-
-
 # -----------------------------------------------------------
 # Utilities
 # -----------------------------------------------------------

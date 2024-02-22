@@ -13,9 +13,7 @@ class Writer(ContractHandler):
     def __init__(
         self,
         web3,
-        erc_20_address,
-        omnipool,
-        prime_broker_manager,
+        abi_manager,
         private_key,
         default_address,
         send_options,
@@ -25,18 +23,10 @@ class Writer(ContractHandler):
         self.private_key = private_key
         self.default_address = default_address
         self.send_options = send_options
-        self.omnipool = omnipool
-        self.prime_broker_manager = prime_broker_manager
-
-        # Get contracts from ABI.
-        self.erc20 = self.get_contract(erc_20_address, Constants.ERC20)
+        self.abi_manager = abi_manager
 
         # Initialize mapping of next nonce per address.
         self._next_nonce_for_address = {}
-
-        # Initialize mapping of prime brokers per address.
-        self.prime_brokers = {}
-
 
     # -----------------------------------------------------------
     # General Transactions
@@ -46,6 +36,7 @@ class Writer(ContractHandler):
             self,
             address,
             amount,
+            erc20,
             send_options=None,
     ):
         '''
@@ -57,6 +48,9 @@ class Writer(ContractHandler):
         :param amount: required
         :type amount: integer
 
+        :param erc20: required
+        :type erc20: address
+
         :param send_options: optional
         :type send_options: sendOptions
 
@@ -65,7 +59,7 @@ class Writer(ContractHandler):
         :raises: TransactionReverted
         '''
         return self.send_transaction(
-            method=self.erc20.functions.approve(
+            method=self.abi_manager.get_erc20(erc20).functions.approve(
                 address,
                 amount
             ),
@@ -76,6 +70,7 @@ class Writer(ContractHandler):
         self,
         to,
         amount,
+        erc20,
         send_options=None,
     ):
         '''
@@ -87,6 +82,9 @@ class Writer(ContractHandler):
         :param amount: required
         :type amount: integer
 
+        :param erc20: required
+        :type erc20: addresss
+
         :param send_options: optional
         :type send_options: sendOptions
 
@@ -95,7 +93,7 @@ class Writer(ContractHandler):
         :raises: TransactionReverted
         '''
         return self.send_transaction(
-            method=self.erc20.functions.transfer(
+            method=self.abi_manager.get_erc20(erc20).functions.transfer(
                 to,
                 amount
             ),
@@ -106,26 +104,21 @@ class Writer(ContractHandler):
     # Lending Transactions
     # -----------------------------------------------------------
 
-    def execute_open_position(
+    def deposit(
         self,
         amount,
-        strategies,
-        strategy_allocations,
+        strategy_reserve,
         on_behalf_of=None,
         send_options=None,
     ):
         '''
-        Execute open position, minting a receipt and establishing allocations
-        in one or more strategies for enrolled funds (amount).
+        Deposit assets into the strategy reserve and receive tokenized vault shares back.
 
         :param amount: required
         :type amount: integer
 
-        :param strategies: required
-        :type strategies: []address
-
-        :param strategy_allocations: required
-        :type percent_allocations: []integer
+        :param strategy_reserve: required
+        :type strategy_reserve: address
 
         :param on_behalf_of: optional
         :type on_behalf_of: address
@@ -138,66 +131,11 @@ class Writer(ContractHandler):
         :raises: TransactionReverted
         '''
         return self.send_transaction(
-            method=self.omnipool.functions.executeOpenPosition(
+            method=self.abi_manager.get_strategy_reserve(strategy_reserve).functions.deposit(
                 amount,
-                on_behalf_of or self.default_address,
-                (strategies, strategy_allocations)
+                on_behalf_of or self.default_address
             ),
             options=send_options,
-        )
-    
-    # -----------------------------------------------------------
-    # Borrowing Transactions
-    # -----------------------------------------------------------
-
-    def execute_borrow(
-            self,
-            prime_broker,
-            collateral=0,
-            loan=0,
-            send_options=None,
-    ):
-        '''
-        Execute borrow, creating or increasing a borrow balance for a specific
-        strategy.
-
-        :param prime_broker: required
-        :type prime_broker: address
-
-        :param collateral: optional
-        :type collateral: integer
-
-        :param loan: optional
-        :type loan: integer
-
-        :param send_options: optional
-        :type send_options: sendOptions
-
-        :returns: transactionHash
-
-        :raises: TransactionReverted
-        '''
-        return self.send_transaction(
-            method=self.prime_broker_manager.functions.executeBorrow(
-                prime_broker,
-                (collateral, loan)
-            ),
-            options=send_options,
-        )
-
-    # TODO remove
-    def update_for_strategy_performance(self, prime_broker, asset_change, is_profit):
-        if prime_broker not in self.prime_brokers:
-            self.prime_brokers[prime_broker] = self.get_contract(
-                prime_broker, 
-                Constants.PRIME_BROKER_ABI,
-            )
-            
-        return self.send_transaction(
-            method=self.prime_brokers[prime_broker].functions.updateForStrategyPerformance(
-                asset_change, 
-                is_profit,
-            )
         )
 
     # -----------------------------------------------------------
