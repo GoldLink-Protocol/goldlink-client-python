@@ -1,8 +1,7 @@
 """Module providing access to methods for reading from GoldLink Contracts."""
 
-import goldlink.constants as Constants
 from goldlink.modules.contract_handler import ContractHandler
-from goldlink.errors import GoldLinkError
+from goldlink.modules.abi_manager import AbiManager
 
 class Reader(ContractHandler):
     '''
@@ -13,180 +12,75 @@ class Reader(ContractHandler):
         self,
         web3,
         network_id,
+        address,
+        abi_manager: AbiManager
     ):
         ContractHandler.__init__(self, web3)
 
         self.network_id = network_id
+        self.address = address
+        self.abi_manager = abi_manager
 
-        # Get contracts from ABI.
-        self.address_manager = self.get_contract(
-            self.get_address_manager(),
-            Constants.ADDRESS_MANAGER_ABI,
-        )
-        self.omnipool = self.get_contract(self.get_omnipool(), Constants.OMNIPOOL_ABI)
-        self.prime_broker_manager = self.get_contract(
-            self.get_prime_broker_manager(), 
-            Constants.PRIME_BROKER_MANAGER_ABI,
-        )
-        self.strategy_pools = {}
-        self.prime_brokers = {}
+        self.owned_accounts = []
 
     # -----------------------------------------------------------
     # Address Querying Functions
     # -----------------------------------------------------------
-
-    def get_address_manager(self):
+        
+    def get_strategy_asset(self, strategy_reserve=None, strategy_bank=None):
         '''
-        Get address of the Address Manager.
+        Get the asset for a strategy.
 
-        :returns: address
+        :param strategy_reserve: optional
+        :type strategy_reserve: address
 
-        :raises: GoldLinkError
-        '''
-        if self.network_id == Constants.NETWORK_ID_ANVIL:
-            return  Constants.CONTRACTS[Constants.ADDRESS_MANAGER][Constants.NETWORK_ID_ANVIL]
-        raise GoldLinkError("Invalid network ID")
-
-    def get_omnipool(self):
-        '''
-        Get address of the OmniPool.
+        :param strategy_bank: optional
+        :type strategy_bank: address
 
         :returns: address
         '''
-        return self.address_manager.functions.omnipool_().call()
+        if strategy_reserve:
+            return  self.abi_manager.get_strategy_reserve(strategy_reserve).functions.STRATEGY_ASSET().call()
+        if strategy_bank:
+            return  self.abi_manager.get_strategy_bank(strategy_bank).functions.STRATEGY_ASSET().call()
+
+    def get_strategy_bank_for_reserve(self, strategy_reserve):
+        '''
+        Get address of the StrategyBank for a reserve.
+
+        :param strategy_reserve: required
+        :type strategy_reserve: address
+
+        :returns: address
+        '''
+        return self.abi_manager.get_strategy_reserve(strategy_reserve).functions.STRATEGY_BANK().call()
     
-    def get_prime_broker_manager(self):
+    def get_strategy_reserve_for_bank(self, strategy_bank):
         '''
-        Get address of the PrimeBrokerManager.
+        Get address of the StrategyReserve for a bank.
+
+        :param strategy_bank: required
+        :type strategy_bank: address
 
         :returns: address
         '''
-        return self.address_manager.functions.primeBrokerManager_().call()
-
-    def get_strategy_pools(self):
+        return  self.abi_manager.get_strategy_bank(strategy_bank).functions.STRATEGY_RESERVE().call()
+    
+    def get_strategy_accounts_for_bank(self, strategy_bank):
         '''
-        Get all strategy pool addresses.
+        Get address of every strategy account for a bank.
+
+        :param strategy_bank: required
+        :type strategy_bank: address
 
         :returns: []address
         '''
-        return self.address_manager.functions.getStrategyPools().call()
-    
-    def get_prime_brokers(self):
-        '''
-        Get all prime broker addresses.
+        strategy_account_address =  self.abi_manager.get_strategy_bank(strategy_bank).functions.STRATEGY_RESERVE().call()
 
-        :returns: []address
-        '''
-        return self.address_manager.functions.getPrimeBrokers().call()
+        for strategy_account in strategy_account_address:
+           strategy_account_object = self.abi_manager.get_strategy_account(strategy_account)
 
-    def get_omnipool_allowed_address(self):
-        '''
-        Get allowed asset address for OmniPool.
+           if strategy_account_object.functions.getOwner() == self.address:
+               self.owned_accounts.push(strategy_account)
 
-        :returns: address
-        '''
-        return self.omnipool.functions.PROTOCOL_ASSET().call()
-
-    # -----------------------------------------------------------
-    # Strategy Pool Querying Functions
-    # -----------------------------------------------------------
-
-    def get_total_enrolled_funds(self, strategy_pool):
-        '''
-        Get total enrolled funds in strategy pool.
-
-        :param strategy_pool: required
-        :type strategy_pool: string
-
-        :returns: integer
-        '''
-        # Add `strategy_pool` to `self.strategy_pools` if not a part of the mapping.
-        if strategy_pool not in self.strategy_pools:
-            self.strategy_pools[strategy_pool] = self.get_contract(
-                strategy_pool,
-                Constants.STRATEGY_POOL_ABI,
-            )
-
-        # Return total enrolled funds for the strategy pool.
-        return self.strategy_pools[
-            strategy_pool
-        ].functions.totalEnrolledFunds_().call()
-
-    # -----------------------------------------------------------
-    # OmniPool Querying Functions
-    # -----------------------------------------------------------
-
-    def get_position(self, token_id):
-        '''
-        Get receipt information for a token.
-
-        :param token_id: required
-        :type token_id: integer
-
-        :returns: position
-        '''
-        return self.omnipool.functions.getPosition(token_id).call()
-    
-    # -----------------------------------------------------------
-    # Prime Broker Querying Functions
-    # -----------------------------------------------------------
-    
-    def get_borrower_holdings(self, prime_broker, borrower):
-        '''
-        Get borrower holdings in a prime broker. Does not account
-        for profit or loss.
-
-        :param prime_broker: required
-        :type prime_broker: address
-
-        :param borrower: required
-        :type borrower: address
-
-        :returns: BorrowerHoldings
-        '''
-        if prime_broker not in self.prime_brokers:
-            self.prime_brokers[prime_broker] = self.get_contract(
-                prime_broker, 
-                Constants.PRIME_BROKER_ABI,
-            )
-
-        return self.prime_brokers[prime_broker].functions.getBorrowerHoldings(borrower).call()
-
-    def get_health_score(self, prime_broker, borrower_holding):
-        '''
-        Get borrower holdings health score in a prime broker.
-
-        :param prime_broker: required
-        :type prime_broker: address
-
-        :param borrower_holding: required
-        :type borrower_holding: BorrowerHoldings
-
-        :returns: integer
-        '''
-        if prime_broker not in self.prime_brokers:
-            self.prime_brokers[prime_broker] = self.get_contract(
-                prime_broker, 
-                Constants.PRIME_BROKER_ABI,
-            )
-
-        return self.prime_brokers[prime_broker].functions.getHealthScore(borrower_holding).call()
-
-
-    def get_prime_broker_share_price(self, prime_broker):
-        '''
-        Get prime broker share price.
-
-        :param prime_broker: required
-        :type prime_broker: address
-
-        :returns: float
-        '''
-        if prime_broker not in self.prime_brokers:
-            self.prime_brokers[prime_broker] = self.get_contract(
-                prime_broker, 
-                Constants.PRIME_BROKER_ABI,
-            )
-
-        one_thousand_shares_of_asset = self.prime_brokers[prime_broker].functions.convertToAssets(1000).call()
-        return one_thousand_shares_of_asset / 1000
+        return strategy_account_address
