@@ -12,7 +12,7 @@ from goldlink.constants import NETWORK_ID_ANVIL
 from examples.constants import WEB_PROVIDER_URL, ETHEREUM_ADDRESS, ETHEREUM_PRIVATE_KEY
 
 # Amount to borrow.
-BORROW_AMOUNT = 500
+BORROW_AMOUNT = 20000000
 
 # Initialize client.
 client = Client(
@@ -23,28 +23,52 @@ client = Client(
 )
 
 # Get relevant contract addresses.
-omnipool = client.reader.get_omnipool()
-prime_brokers = client.reader.get_prime_brokers()
-prime_broker_manager = client.reader.get_prime_broker_manager()
+strategy_bank = "0x79F970a8456725f1CFB263a899522b629319C680"
+erc20_address = client.reader.get_strategy_asset(strategy_bank=strategy_bank)
 
-# Set approval for PrimeBrokerManager to pull funds from this wallet.
-print("Awaiting borrow approval")
-approve_transaction = client.writer.approve_address(prime_broker_manager, BORROW_AMOUNT * 10)
+print("Deploying strategy account")
+open_transaction = client.writer.open_account(strategy_bank)
+receipt = client.writer.wait_for_transaction(open_transaction)
+openAccountEvent = client.event_handler.handle_open_account_event(
+    strategy_bank,
+    receipt
+)
+strategy_account = openAccountEvent['strategyAccount']
+print("Strategy account")
+
+# Set approval for strategy account to pull funds from this wallet.
+print("Awaiting add collateral approval")
+approve_transaction = client.writer.approve_address(
+    address=strategy_bank, 
+    amount=BORROW_AMOUNT * 10, 
+    erc20=erc20_address
+)
 client.writer.wait_for_transaction(approve_transaction)
-print("Borrow approved")
+print("Add collateral approved")
+
+print("Adding collateral")
+add_collateral_transaction = client.writer.add_collateral(
+    strategy_account=strategy_account,
+    amount=10000000
+)
+receipt = client.writer.wait_for_transaction(add_collateral_transaction)
+print("Add collateral event: ", client.event_handler.handle_add_collateral_event(strategy_bank, receipt))
 
 # Create borrow balance.
-print("Opening borrow balance")
-balance_transaction = client.writer.execute_borrow(
-    prime_brokers[0],
-    BORROW_AMOUNT,
-    BORROW_AMOUNT,
+print("Borrowing")
+borrow_transaction = client.writer.borrow(
+    strategy_account,
+    BORROW_AMOUNT
 )
-receipt = client.writer.wait_for_transaction(balance_transaction)
-borrowEvent = client.event_handler.handle_borrow(receipt)
-print("Borrow Event: ", borrowEvent)
+receipt = client.writer.wait_for_transaction(borrow_transaction)
+borrowEvent = client.event_handler.handle_borrow_event(strategy_bank, receipt)
+print("Borrow event: ", borrowEvent)
+
+strategy_reserve = client.reader.get_strategy_reserve_for_bank(strategy_bank=strategy_bank)
+erc20 = client.reader.get_erc20(erc20=erc20_address)
 
 # Print effects of borrowing.
-print("OmniPool balance: ", client.writer.erc20.functions.balanceOf(omnipool).call())
-print("Prime Broker balance: ", client.writer.erc20.functions.balanceOf(prime_brokers[0]).call())
-print("Borrower balance: ", client.reader.get_borrower_holdings(prime_brokers[0], ETHEREUM_ADDRESS))
+print("Reserve balance: ", erc20.functions.balanceOf(strategy_reserve).call())
+print("Strategy Bank balance: ", erc20.functions.balanceOf(strategy_bank).call())
+print("Strategy Account balance: ", erc20.functions.balanceOf(strategy_account).call())
+print("Borrower balance: ", erc20.functions.balanceOf(ETHEREUM_ADDRESS).call())

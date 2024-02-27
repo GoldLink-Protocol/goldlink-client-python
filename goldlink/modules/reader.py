@@ -1,7 +1,6 @@
 """Module providing access to methods for reading from GoldLink Contracts."""
 
 from goldlink.modules.contract_handler import ContractHandler
-from goldlink.modules.abi_manager import AbiManager
 
 class Reader(ContractHandler):
     '''
@@ -12,14 +11,12 @@ class Reader(ContractHandler):
         self,
         web3,
         network_id,
-        address,
-        abi_manager: AbiManager
+        default_address
     ):
         ContractHandler.__init__(self, web3)
 
         self.network_id = network_id
-        self.address = address
-        self.abi_manager = abi_manager
+        self.default_address = default_address
 
         self.owned_accounts = []
 
@@ -40,9 +37,9 @@ class Reader(ContractHandler):
         :returns: address
         '''
         if strategy_reserve:
-            return  self.abi_manager.get_strategy_reserve(strategy_reserve).functions.STRATEGY_ASSET().call()
+            return  self.get_strategy_reserve(strategy_reserve).functions.STRATEGY_ASSET().call()
         if strategy_bank:
-            return  self.abi_manager.get_strategy_bank(strategy_bank).functions.STRATEGY_ASSET().call()
+            return  self.get_strategy_bank(strategy_bank).functions.STRATEGY_ASSET().call()
 
     def get_strategy_bank_for_reserve(self, strategy_reserve):
         '''
@@ -53,7 +50,7 @@ class Reader(ContractHandler):
 
         :returns: address
         '''
-        return self.abi_manager.get_strategy_reserve(strategy_reserve).functions.STRATEGY_BANK().call()
+        return self.get_strategy_reserve(strategy_reserve).functions.STRATEGY_BANK().call()
     
     def get_strategy_reserve_for_bank(self, strategy_bank):
         '''
@@ -64,9 +61,9 @@ class Reader(ContractHandler):
 
         :returns: address
         '''
-        return  self.abi_manager.get_strategy_bank(strategy_bank).functions.STRATEGY_RESERVE().call()
+        return  self.get_strategy_bank(strategy_bank).functions.STRATEGY_RESERVE().call()
     
-    def get_strategy_accounts_for_bank(self, strategy_bank):
+    def get_strategy_accounts_for_bank(self, strategy_bank, addresss):
         '''
         Get address of every strategy account for a bank.
 
@@ -75,12 +72,12 @@ class Reader(ContractHandler):
 
         :returns: []address
         '''
-        strategy_account_address =  self.abi_manager.get_strategy_bank(strategy_bank).functions.STRATEGY_RESERVE().call()
+        strategy_account_address =  self.get_strategy_bank(strategy_bank).functions.STRATEGY_RESERVE().call()
 
         for strategy_account in strategy_account_address:
-           strategy_account_object = self.abi_manager.get_strategy_account(strategy_account)
+           strategy_account_object = self.get_strategy_account(strategy_account)
 
-           if strategy_account_object.functions.getOwner() == self.address:
+           if strategy_account_object.functions.getOwner() == addresss or self.default_address:
                self.owned_accounts.push(strategy_account)
 
         return strategy_account_address

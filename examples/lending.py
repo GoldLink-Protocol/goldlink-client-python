@@ -10,7 +10,7 @@ from goldlink.constants import NETWORK_ID_ANVIL
 from examples.constants import WEB_PROVIDER_URL, ETHEREUM_ADDRESS, ETHEREUM_PRIVATE_KEY
 
 # Amount to lend.
-LEND_AMOUNT = 10000
+LEND_AMOUNT = 40000000
 
 # Initialize client.
 client = Client(
@@ -21,43 +21,44 @@ client = Client(
 )
 
 # Get relevant contract addresses.
-strategies = client.reader.get_strategy_pools()
-omnipool = client.reader.get_omnipool()
+strategy_reserve = "0xd8058efe0198ae9dD7D563e1b4938Dcbc86A1F81"
+erc20_address = client.reader.get_strategy_asset(strategy_reserve=strategy_reserve)
+erc20 = client.reader.get_erc20(erc20=erc20_address)
 
 # Get some relevant "before" data points.
-before_omnipool_balance = client.writer.erc20.functions.balanceOf(omnipool).call()
-before_enrolled_funds = client.reader.get_total_enrolled_funds(strategies[0])
+before_reserve_balance = erc20.functions.balanceOf(strategy_reserve).call()
+print(ETHEREUM_ADDRESS)
+print("BEFORE: ", erc20.functions.balanceOf(ETHEREUM_ADDRESS).call())
 
 # Set approval for OmniPool to pull funds from this wallet.
 print("Awaiting lending approval")
-approve_transaction = client.writer.approve_address(omnipool, LEND_AMOUNT * 10)
+approve_transaction = client.writer.approve_address(
+    address=strategy_reserve, 
+    amount=LEND_AMOUNT * 10, 
+    erc20=erc20_address
+)
 client.writer.wait_for_transaction(approve_transaction)
 print("Lending approved")
 
 # Lend to a single strategy.
 print("Opening lending position")
-position_transaction = client.writer.execute_open_position(
+position_transaction = client.writer.deposit(
     LEND_AMOUNT,
-    [strategies[0]],
-    [1 * 10 ** 18],
-    ETHEREUM_ADDRESS,
+    strategy_reserve,
 )
 receipt = client.writer.wait_for_transaction(position_transaction)
-openPositionEvent = client.event_handler.handle_open_position(receipt)
-print("Open Position Event: ", openPositionEvent)
+depositEvent = client.event_handler.handle_deposit_event(
+    strategy_reserve,
+    receipt
+)
+print("Open Position Event: ", depositEvent)
 
 # Verify lending succeeded.
-position = client.reader.get_position(1)
-after_omnipool_balance = client.writer.erc20.functions.balanceOf(omnipool).call()
-after_enrolled_funds = client.reader.get_total_enrolled_funds(strategies[0])
+after_reserve_balance = erc20.functions.balanceOf(strategy_reserve).call()
 
-assert after_omnipool_balance - before_omnipool_balance == LEND_AMOUNT
-assert after_enrolled_funds - before_enrolled_funds == LEND_AMOUNT
-assert position[0] == LEND_AMOUNT
-assert position[2] == [1 * 10 ** 18]
+assert after_reserve_balance - before_reserve_balance == LEND_AMOUNT
 print("Lending position verified")
 
 # Print effects of lending.
-print("OmniPool balance: ", client.writer.erc20.functions.balanceOf(omnipool).call())
-print("Position: ", client.reader.get_position(1))
-print("Strategy1 enrollment: ", client.reader.get_total_enrolled_funds(strategies[0]))
+print("Strategy Reserve balance: ", erc20.functions.balanceOf(strategy_reserve).call())
+print("Lender balance: ", erc20.functions.balanceOf(ETHEREUM_ADDRESS).call())
