@@ -5,9 +5,9 @@ from web3 import Web3
 from goldlink.modules.reader import Reader
 from goldlink.modules.event_handler import EventHandler
 from goldlink.modules.writer import Writer
+from goldlink.modules.strategies.gmx_frf.gmx_frf_writer import GmxFrfWriter
 from goldlink.constants import NETWORK_ID_MAINNET, DEFAULT_API_TIMEOUT
 from goldlink.signing.signer import SignWithWeb3, SignWithKey
-from goldlink.modules.abi_manager import AbiManager
 
 class Client(object):
     '''
@@ -27,9 +27,6 @@ class Client(object):
         web3_provider=None,
         host=None,
     ):
-        # Create ABI manager all modules will share.
-        self.abi_manager = AbiManager()
-        
         # Set API parameters if input.
         self.send_options = send_options or {}
         self.api_timeout = api_timeout or DEFAULT_API_TIMEOUT
@@ -74,11 +71,11 @@ class Client(object):
         self._reader = Reader(
             web3=self.web3, 
             network_id=self.network_id, 
-            default_address=self.default_address,
-            abi_manager=self.abi_manager
+            default_address=self.default_address
         )
-        self._event_handler = EventHandler(self.abi_manager)
+        self._event_handler = EventHandler(web3=self.web3)
         self._writer = None
+        self._gmx_frf_writer = None
 
     @property
     def reader(self):
@@ -105,7 +102,6 @@ class Client(object):
             if self.web3 and private_key:
                 self._writer = Writer(
                     web3=self.web3,
-                    abi_manager=self.abi_manager,
                     private_key=private_key,
                     default_address=self.default_address,
                     send_options=self.send_options,
@@ -117,4 +113,27 @@ class Client(object):
                     'private_key nor web3_account was provided',
                 )
         return self._writer
+    
+
+    @property
+    def gmx_frf_writer(self):
+        '''
+        Get the GMX Funding-Rate Farming Writer module, used for sending strategy specific transactions to the protocol.
+        '''
+        if not self._gmx_frf_writer:
+            private_key = getattr(self.signer, '_private_key', None)
+            if self.web3 and private_key:
+                self._gmx_frf_writer = GmxFrfWriter(
+                    web3=self.web3,
+                    private_key=private_key,
+                    default_address=self.default_address,
+                    send_options=self.send_options,
+                )
+            else:
+                raise Exception(
+                    'GMX Funding-Rate Farming Writer module is not supported since neither web3 ' +
+                    'nor web3_provider was provided OR since neither ' +
+                    'private_key nor web3_account was provided',
+                )
+        return self._gmx_frf_writer
     
