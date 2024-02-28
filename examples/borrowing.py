@@ -14,6 +14,9 @@ from examples.constants import WEB_PROVIDER_URL, ETHEREUM_ADDRESS, ETHEREUM_PRIV
 # Amount to borrow.
 BORROW_AMOUNT = 20000000
 
+# Amount of collateral
+COLLATERAL_AMOUNT = 10000000
+
 # Initialize client.
 client = Client(
     network_id=NETWORK_ID_ANVIL,
@@ -24,7 +27,7 @@ client = Client(
 
 # Get relevant contract addresses.
 strategy_bank = "0x79F970a8456725f1CFB263a899522b629319C680"
-erc20_address = client.reader.get_strategy_asset(strategy_bank=strategy_bank)
+erc20 = client.reader.get_strategy_asset(strategy_bank=strategy_bank)
 
 print("Deploying strategy account")
 open_transaction = client.writer.open_account(strategy_bank)
@@ -41,7 +44,7 @@ print("Awaiting add collateral approval")
 approve_transaction = client.writer.approve_address(
     address=strategy_bank, 
     amount=BORROW_AMOUNT * 10, 
-    erc20=erc20_address
+    erc20=erc20
 )
 client.writer.wait_for_transaction(approve_transaction)
 print("Add collateral approved")
@@ -49,7 +52,7 @@ print("Add collateral approved")
 print("Adding collateral")
 add_collateral_transaction = client.writer.add_collateral(
     strategy_account=strategy_account,
-    amount=10000000
+    amount=COLLATERAL_AMOUNT
 )
 receipt = client.writer.wait_for_transaction(add_collateral_transaction)
 print("Add collateral event: ", client.event_handler.handle_add_collateral_event(strategy_bank, receipt))
@@ -61,14 +64,37 @@ borrow_transaction = client.writer.borrow(
     BORROW_AMOUNT
 )
 receipt = client.writer.wait_for_transaction(borrow_transaction)
-borrowEvent = client.event_handler.handle_borrow_event(strategy_bank, receipt)
-print("Borrow event: ", borrowEvent)
+borrow_event = client.event_handler.handle_borrow_event(strategy_bank, receipt)
+print("Borrow event: ", borrow_event)
 
 strategy_reserve = client.reader.get_strategy_reserve_for_bank(strategy_bank=strategy_bank)
-erc20 = client.reader.get_erc20(erc20=erc20_address)
 
 # Print effects of borrowing.
-print("Reserve balance: ", erc20.functions.balanceOf(strategy_reserve).call())
-print("Strategy Bank balance: ", erc20.functions.balanceOf(strategy_bank).call())
-print("Strategy Account balance: ", erc20.functions.balanceOf(strategy_account).call())
-print("Borrower balance: ", erc20.functions.balanceOf(ETHEREUM_ADDRESS).call())
+print("Reserve balance: ", client.reader.get_balance_of(erc20, strategy_reserve))
+print("Strategy Bank balance: ", client.reader.get_balance_of(erc20, strategy_bank))
+print("Strategy Account balance: ", client.reader.get_balance_of(erc20, strategy_account))
+print("Borrower balance: ", client.reader.get_balance_of(erc20, ETHEREUM_ADDRESS))
+
+
+# Repay borrow balance.
+print("Repaying")
+repay_transaction = client.writer.repay(
+    strategy_account,
+    BORROW_AMOUNT
+)
+receipt = client.writer.wait_for_transaction(repay_transaction)
+repay_event = client.event_handler.handle_repay_event(strategy_bank, receipt)
+print("Repay event: ", repay_event)
+
+# Get the strategy account balance.
+strategy_account_balance = client.reader.get_strategy_account_holdings(strategy_bank, strategy_account)
+
+# Withdraw collateral.
+print("Withdrawing collateral")
+withdraw_transaction = client.writer.withdraw_collateral(
+    strategy_account,
+    strategy_account_balance['collateral']
+)
+receipt = client.writer.wait_for_transaction(withdraw_transaction)
+withdraw_collateral_event = client.event_handler.handle_withdraw_collateral_event(strategy_bank, receipt)
+print("withdrawal event: ", withdraw_collateral_event)

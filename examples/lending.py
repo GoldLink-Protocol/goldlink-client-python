@@ -22,43 +22,77 @@ client = Client(
 
 # Get relevant contract addresses.
 strategy_reserve = "0xd8058efe0198ae9dD7D563e1b4938Dcbc86A1F81"
-erc20_address = client.reader.get_strategy_asset(strategy_reserve=strategy_reserve)
-erc20 = client.reader.get_erc20(erc20=erc20_address)
+erc20 = client.reader.get_strategy_asset(strategy_reserve=strategy_reserve)
 
 # Get some relevant "before" data points.
-before_reserve_balance = erc20.functions.balanceOf(strategy_reserve).call()
-print(ETHEREUM_ADDRESS)
-print("BEFORE: ", erc20.functions.balanceOf(ETHEREUM_ADDRESS).call())
+before_reserve_balance = client.reader.get_balance_of(erc20, strategy_reserve)
+print("BEFORE: ", client.reader.get_balance_of(erc20, ETHEREUM_ADDRESS))
 
-# Set approval for OmniPool to pull funds from this wallet.
+# Set approval for a strategy reserve to pull funds from this wallet.
 print("Awaiting lending approval")
 approve_transaction = client.writer.approve_address(
     address=strategy_reserve, 
     amount=LEND_AMOUNT * 10, 
-    erc20=erc20_address
+    erc20=erc20
 )
 client.writer.wait_for_transaction(approve_transaction)
 print("Lending approved")
 
-# Lend to a single strategy.
-print("Opening lending position")
-position_transaction = client.writer.deposit(
+# Lend to a strategy reserve.
+print("Begin a deposit")
+deposit_transaction = client.writer.deposit(
     LEND_AMOUNT,
     strategy_reserve,
 )
-receipt = client.writer.wait_for_transaction(position_transaction)
+receipt = client.writer.wait_for_transaction(deposit_transaction)
 depositEvent = client.event_handler.handle_deposit_event(
     strategy_reserve,
     receipt
 )
-print("Open Position Event: ", depositEvent)
+print("Deposit Event: ", depositEvent)
+
+# Lend to a strategy reserve via minting.
+print("Begin a mint")
+mint_transaction = client.writer.mint(
+    shares=LEND_AMOUNT,
+    strategy_reserve=strategy_reserve,
+)
+receipt = client.writer.wait_for_transaction(mint_transaction)
+depositEvent = client.event_handler.handle_deposit_event(
+    strategy_reserve,
+    receipt
+)
+print("Mint Event: ", depositEvent)
+
+# Withdraw from a strategy reserve via minting.
+print("Begin a withdraw")
+withdraw_transaction = client.writer.withdraw(
+    amount=20000000,
+    strategy_reserve=strategy_reserve,
+)
+receipt = client.writer.wait_for_transaction(withdraw_transaction)
+depositEvent = client.event_handler.handle_withdraw_event(
+    strategy_reserve,
+    receipt
+)
+print("Withdraw Event: ", depositEvent)
+
+# Redeem from a strategy reserve via minting.
+print("Begin a redemption")
+redeem_transaction = client.writer.redeem(
+    shares=20000000,
+    strategy_reserve=strategy_reserve,
+)
+receipt = client.writer.wait_for_transaction(redeem_transaction)
+depositEvent = client.event_handler.handle_withdraw_event(
+    strategy_reserve,
+    receipt
+)
+print("Redeem Event: ", depositEvent)
 
 # Verify lending succeeded.
-after_reserve_balance = erc20.functions.balanceOf(strategy_reserve).call()
-
-assert after_reserve_balance - before_reserve_balance == LEND_AMOUNT
-print("Lending position verified")
+after_reserve_balance = client.reader.get_balance_of(erc20, strategy_reserve)
 
 # Print effects of lending.
-print("Strategy Reserve balance: ", erc20.functions.balanceOf(strategy_reserve).call())
-print("Lender balance: ", erc20.functions.balanceOf(ETHEREUM_ADDRESS).call())
+print("Strategy Reserve balance: ", after_reserve_balance)
+print("Lender balance: ", client.reader.get_balance_of(erc20, ETHEREUM_ADDRESS))
