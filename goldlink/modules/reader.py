@@ -81,3 +81,44 @@ class Reader(ContractHandler):
                self.owned_accounts.push(strategy_account)
 
         return strategy_account_address
+
+    # -----------------------------------------------------------
+    # ERC20 Querying Functions
+    # -----------------------------------------------------------
+
+    def get_balance_of(self, erc20, address):
+        '''
+        Get address balance of erc20.
+
+        :param erc20: required
+        :type erc20: address
+
+        :param address: address
+        :type address: address
+
+        :returns: integer
+        '''
+        return self.get_erc20(erc20).functions.balanceOf(address).call()
+    
+    # -----------------------------------------------------------
+    # Borrowing Functions
+    # -----------------------------------------------------------
+
+    def get_strategy_account_holdings(self, strategy_bank, strategy_account):
+        '''
+        Get holdings for a strategy account.
+
+        :param strategy_bank: required
+        :type strategy_bank: address
+
+        :param strategy_account: address
+        :type strategy_account: address
+
+        :returns: AttributeDict
+        '''
+        holdings = self.get_strategy_bank(strategy_bank).functions.getStrategyAccountHoldings(strategy_account).call()
+        return {
+            'collateral': holdings[0],
+            'loan': holdings[1],
+            'interestIndexLast': holdings[2]
+        }
