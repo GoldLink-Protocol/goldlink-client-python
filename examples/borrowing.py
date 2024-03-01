@@ -42,7 +42,7 @@ print(f"Strategy account deployed, address {strategy_account}")
 # Set approval for strategy account to pull funds from this wallet.
 print(f"Approve strategy account {strategy_account} to pull collateral")
 approve_transaction = client.writer.approve_address(
-    address=strategy_account, 
+    address=strategy_bank, 
     amount=BORROW_AMOUNT * 10, 
     erc20=erc20
 )
