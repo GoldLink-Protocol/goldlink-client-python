@@ -155,3 +155,25 @@ class Reader(ContractHandler):
         :returns: integer
         '''
         return self.get_strategy_bank(strategy_bank).functions.getWithdrawableCollateral(strategy_account).call()
+
+    def get_account_liquidation_status(self, strategy_account):
+        '''
+        Get account liquidation status.
+
+        :param strategy_account: address
+        :type strategy_account: address
+
+        :returns: integer
+        '''
+        return self.get_strategy_account(strategy_account).functions.getAccountLiquidationStatus().call()
+
+    def get_account_value(self, strategy_account):
+        '''
+        Get account value.
+
+        :param strategy_account: address
+        :type strategy_account: address
+
+        :returns: integer
+        '''
+        return self.get_strategy_account(strategy_account).functions.getAccountValue().call()
