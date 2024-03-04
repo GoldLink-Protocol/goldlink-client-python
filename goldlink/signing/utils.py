@@ -1,5 +1,7 @@
 from goldlink import constants
 
+# ============ Signature Helpers ============
+
 def is_valid_sig_type(
     sig_type,
 ):

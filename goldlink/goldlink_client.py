@@ -6,6 +6,7 @@ from goldlink.modules.reader import Reader
 from goldlink.modules.event_handler import EventHandler
 from goldlink.modules.writer import Writer
 from goldlink.modules.strategies.gmx_frf.gmx_frf_writer import GmxFrfWriter
+from goldlink.modules.strategies.gmx_frf.gmx_frf_event_handler import GmxFrfEventHandler
 from goldlink.constants import NETWORK_ID_MAINNET, DEFAULT_API_TIMEOUT
 from goldlink.signing.signer import SignWithWeb3, SignWithKey
 
@@ -74,6 +75,7 @@ class Client(object):
             default_address=self.default_address
         )
         self._event_handler = EventHandler(web3=self.web3)
+        self._gmx_frf_event_handler = GmxFrfEventHandler(web3=self.web3)
         self._writer = None
         self._gmx_frf_writer = None
 
@@ -90,7 +92,13 @@ class Client(object):
         Get the event handler module, used for handling events emitted from the protocol.
         '''
         return self._event_handler
-
+    
+    @property
+    def gmx_frf_event_handler(self):
+        '''
+        Get the GMX Funding-rate Farming strategy event handler module, used for handling events emitted from the protocol.
+        '''
+        return self.gmx_frf_event_handler
 
     @property
     def writer(self):

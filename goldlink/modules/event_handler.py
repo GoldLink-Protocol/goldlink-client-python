@@ -1,6 +1,7 @@
 """Module providing access to methods for handling events from GoldLink Contracts."""
 
 from goldlink.modules.contract_handler import ContractHandler
+from goldlink.helpers import handle_event
 
 class EventHandler(ContractHandler):
 
@@ -217,18 +218,3 @@ class EventHandler(ContractHandler):
         strategy_account_abi = self.get_strategy_account(strategy_account)
 
         return handle_event(strategy_account_abi.events.ProcessLiquidation().processReceipt(transaction_receipt))
-
-# -----------------------------------------------------------
-# Utilities
-# -----------------------------------------------------------
-
-def handle_event(event):
-    '''
-    Handle parsing a generic event.
-
-    :param event: required
-    :type event: Event
-
-    :returns: AttributeDict
-    '''
-    return event[0]['args']
