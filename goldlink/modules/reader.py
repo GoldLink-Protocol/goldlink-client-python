@@ -122,3 +122,36 @@ class Reader(ContractHandler):
             'loan': holdings[1],
             'interestIndexLast': holdings[2]
         }
+
+    def get_strategy_account_holdings_after_paying_interest(self, strategy_bank, strategy_account):
+        '''
+        Get holdings for a strategy account after factoring in interest.
+
+        :param strategy_bank: required
+        :type strategy_bank: address
+
+        :param strategy_account: address
+        :type strategy_account: address
+
+        :returns: AttributeDict
+        '''
+        holdings = self.get_strategy_bank(strategy_bank).functions.getStrategyAccountHoldingsAfterPayingInterest(strategy_account).call()
+        return {
+            'collateral': holdings[0],
+            'loan': holdings[1],
+            'interestIndexLast': holdings[2]
+        }
+
+    def get_withdrawable_collateral(self, strategy_bank, strategy_account):
+        '''
+        Get withdrawable collateral for a strategy account.
+
+        :param strategy_bank: required
+        :type strategy_bank: address
+
+        :param strategy_account: address
+        :type strategy_account: address
+
+        :returns: integer
+        '''
+        return self.get_strategy_bank(strategy_bank).functions.getWithdrawableCollateral(strategy_account).call()
