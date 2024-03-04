@@ -54,4 +54,106 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
+
+    def claim_collateral(
+            self,
+            strategy_account,
+            market,
+            asset,
+            time_key,
+            send_options=None
+    ):
+        '''
+        Claim collateral for a market.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param market: required
+        :type market: address
+
+        :param asset: required
+        :type asset: address
+
+        :param time_key: required
+        :type time_key: integer
+
+        :param send_options: optional
+        :type send_options: sendOptions
+
+        :returns: None
+
+        :raise: TransactionReverted
+        ''' 
+        return self.send_transaction(
+            method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeClaimCollateral(
+                market=market,
+                asset=asset,
+                timeKey=time_key
+            ),
+            options=send_options,
+        )
     
+    def claim_funding_fees(
+            self,
+            strategy_account,
+            markets,
+            assets,
+            send_options=None
+    ):
+        '''
+        Claim funding fees across markets.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param markets: required
+        :type markets: []address
+
+        :param assets: required
+        :type assets: []address
+        
+        :param send_options: optional
+        :type send_options: sendOptions
+
+        :returns: None
+
+        :raise: TransactionReverted
+        ''' 
+        return self.send_transaction(
+            method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeClaimFundingFees(
+                markets=markets,
+                assets=assets
+            ),
+            options=send_options,
+        )
+    
+    def cancel_order(
+            self,
+            strategy_account,
+            order_key,
+            send_options=None
+    ):
+        '''
+        Cancel an order.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param order_key: required
+        :type order_key: bytes
+
+        :param send_options: optional
+        :type send_options: sendOptions
+
+        :returns: None
+
+        :raise: TransactionReverted
+        ''' 
+        return self.send_transaction(
+            method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeCancelOrder(
+                orderKey=order_key
+            ),
+            options=send_options,
+        )
+
