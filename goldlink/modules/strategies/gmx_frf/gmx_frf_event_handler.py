@@ -15,10 +15,13 @@ class GmxFrfEventHandler(ContractHandler):
     ):
         ContractHandler.__init__(self, web3)
 
-   
-    def handle_cancel_order_event(self, strategy_account, transaction_receipt):
+    # -----------------------------------------------------------
+    # Core Events
+    # -----------------------------------------------------------
+
+    def handle_create_increase_order_event(self, strategy_account, transaction_receipt):
         '''
-        Handle and return event emitted when canceling an order.
+        Handle and return event emitted when creating an increase order.
 
         :param strategy_account: required
         :type strategy_account: address
@@ -30,7 +33,24 @@ class GmxFrfEventHandler(ContractHandler):
         '''
         strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
 
-        return handle_event(strategy_account_abi.events.CancelOrder().processReceipt(transaction_receipt))
+        return handle_event(strategy_account_abi.events.CreateIncreaseOrder().processReceipt(transaction_receipt))
+
+    def handle_create_decrease_order_event(self, strategy_account, transaction_receipt):
+        '''
+        Handle and return event emitted when creating a decrease order.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param transaction_receipt: required
+        :type transaction_receipt: transactionReceipt
+
+        :returns: AttributeDict
+        '''
+        strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
+
+        return handle_event(strategy_account_abi.events.CreateDecreaseOrder().processReceipt(transaction_receipt))
+
 
     def handle_claim_collateral_event(self, strategy_account, transaction_receipt):
         '''
@@ -64,9 +84,10 @@ class GmxFrfEventHandler(ContractHandler):
 
         return handle_event(strategy_account_abi.events.ClaimFundingFees().processReceipt(transaction_receipt))
 
-    def handle_create_decrease_order_event(self, strategy_account, transaction_receipt):
+   
+    def handle_cancel_order_event(self, strategy_account, transaction_receipt):
         '''
-        Handle and return event emitted when creating a decrease order.
+        Handle and return event emitted when canceling an order.
 
         :param strategy_account: required
         :type strategy_account: address
@@ -78,11 +99,15 @@ class GmxFrfEventHandler(ContractHandler):
         '''
         strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
 
-        return handle_event(strategy_account_abi.events.CreateDecreaseOrder().processReceipt(transaction_receipt))
+        return handle_event(strategy_account_abi.events.CancelOrder().processReceipt(transaction_receipt))
 
-    def handle_create_increase_order_event(self, strategy_account, transaction_receipt):
+    # -----------------------------------------------------------
+    # Liquidation Events
+    # -----------------------------------------------------------
+
+    def handle_liquidate_assets_event(self, strategy_account, transaction_receipt):
         '''
-        Handle and return event emitted when creating an increase order.
+        Handle and return event emitted when liquidating assets for a strategy account.
 
         :param strategy_account: required
         :type strategy_account: address
@@ -94,4 +119,68 @@ class GmxFrfEventHandler(ContractHandler):
         '''
         strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
 
-        return handle_event(strategy_account_abi.events.CreateIncreaseOrder().processReceipt(transaction_receipt))
+        return handle_event(strategy_account_abi.events.LiquidateAssets().processReceipt(transaction_receipt))
+    
+    def handle_liquidate_position_event(self, strategy_account, transaction_receipt):
+        '''
+        Handle and return event emitted when liquidating a position for a strategy account.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param transaction_receipt: required
+        :type transaction_receipt: transactionReceipt
+
+        :returns: AttributeDict
+        '''
+        strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
+
+        return handle_event(strategy_account_abi.events.LiquidatePosition().processReceipt(transaction_receipt))
+
+    def handle_rebalance_position_event(self, strategy_account, transaction_receipt):
+        '''
+        Handle and return event emitted when rebalancing a position for a strategy account.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param transaction_receipt: required
+        :type transaction_receipt: transactionReceipt
+
+        :returns: AttributeDict
+        '''
+        strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
+
+        return handle_event(strategy_account_abi.events.RebalancePosition().processReceipt(transaction_receipt))
+
+    def handle_releverage_position_event(self, strategy_account, transaction_receipt):
+        '''
+        Handle and return event emitted when releveraging a position for a strategy account.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param transaction_receipt: required
+        :type transaction_receipt: transactionReceipt
+
+        :returns: AttributeDict
+        '''
+        strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
+
+        return handle_event(strategy_account_abi.events.ReleveragePosition().processReceipt(transaction_receipt))
+    
+    def handle_swap_rebalance_position_event(self, strategy_account, transaction_receipt):
+        '''
+        Handle and return event emitted when a swap rebalance is performed for a strategy account.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param transaction_receipt: required
+        :type transaction_receipt: transactionReceipt
+
+        :returns: AttributeDict
+        '''
+        strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
+
+        return handle_event(strategy_account_abi.events.SwapRebalancePosition().processReceipt(transaction_receipt))
