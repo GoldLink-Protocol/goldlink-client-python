@@ -460,9 +460,9 @@ class Writer(ContractHandler, TransactionHandler):
         '''  
         return self.send_transaction(
             method=self.get_strategy_account(strategy_account).functions.executeWithdrawErc20Assets(
-                receiver=on_behalf_of or self.default_address,
-                tokens=tokens,
-                amounts=amounts
+                on_behalf_of or self.default_address,
+                tokens,
+                amounts
             ),
             options=send_options,
         )
@@ -490,7 +490,7 @@ class Writer(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         ''' 
         return self.send_transaction(
-            method=self.get_strategy_bank(strategy_account).functions.executeInitiateLiquidation(),
+            method=self.get_strategy_account(strategy_account).functions.executeInitiateLiquidation(),
             options=send_options,
         )
     
@@ -513,6 +513,6 @@ class Writer(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         ''' 
         return self.send_transaction(
-            method=self.get_strategy_bank(strategy_account).functions.executeProcessLiquidation(),
+            method=self.get_strategy_account(strategy_account).functions.executeProcessLiquidation(),
             options=send_options,
         )
