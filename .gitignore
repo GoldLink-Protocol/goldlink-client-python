@@ -8,3 +8,5 @@ htmlcov/
 # Local testing
 test_local.py
 .env
+
+__pycache__/

@@ -221,7 +221,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :type amount: integer
 
         :param callback: required
-        :type callback: address
+        :type callback: object
 
         :param receiver: required
         :type receiver: address
