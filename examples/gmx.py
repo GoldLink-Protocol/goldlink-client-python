@@ -37,6 +37,8 @@ client = Client(
 
 # Get relevant contract addresses.
 strategy_bank = "0x9f74A47Cea41dD898F945EF6B729E64176805b26"
+market = "0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0"
+market_2 = "0x773330693cb7d5D233348E25809770A32483A940"
 erc20 = client.reader.get_strategy_asset(strategy_bank=strategy_bank)
 
 strategy_account = GMX_FRF_ACCOUNT
@@ -47,7 +49,7 @@ options = {
 
 create_increase_transaction = client.gmx_frf_writer.create_increase_order(
     strategy_account=strategy_account,
-    market="0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0", 
+    market=market, 
     amount=100,
     send_options=options
 )
@@ -57,7 +59,7 @@ print("Increase order: ", create_increase_order_event.order)
 
 create_decrease_transaction = client.gmx_frf_writer.create_decrease_order(
     strategy_account=strategy_account,
-    market="0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0", 
+    market=market, 
     size_delta_usd=100,
     send_options=options
 )
@@ -67,8 +69,8 @@ print("Decrease order: ", create_decrease_order_event.order)
 
 claim_collateral_transaction = client.gmx_frf_writer.claim_collateral(
     strategy_account=strategy_account,
-    market="0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0",
-    asset= "0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0",
+    market=market,
+    asset= market,
     time_key=50,
     send_options=options
 )
@@ -78,8 +80,8 @@ print("Claim collateral: ", claim_collateral_event)
 
 claim_funding_fees_transaction = client.gmx_frf_writer.claim_funding_fees(
     strategy_account=strategy_account,
-    markets=["0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0", "0x773330693cb7d5D233348E25809770A32483A940"],
-    assets=["0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0", "0x773330693cb7d5D233348E25809770A32483A940"],
+    markets=[market, market_2],
+    assets=[market, market_2],
     send_options=options
 )
 receipt = client.gmx_frf_writer.wait_for_transaction(claim_funding_fees_transaction)
@@ -97,9 +99,9 @@ print("Cancel order: ", cancel_order_event)
 
 liquidate_assets_transaction = client.gmx_frf_writer.liquidate_assets(
     strategy_account=strategy_account,
-    asset="0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0",
+    asset=market,
     amount=120,
-    callback="0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0",
+    callback=market,
     receiver=PUBLIC_KEY,
     send_options=options
 )
@@ -110,7 +112,7 @@ print("Liquidate assets: ", liquidate_assets_event)
 
 liquidate_position_transaction = client.gmx_frf_writer.liquidate_position(
     strategy_account=strategy_account,
-    market="0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0",
+    market=market,
     size_delta_usd=120,
     send_options=options
 )
@@ -120,7 +122,7 @@ print("Liquidate position: ", liquidate_position_event)
 
 rebalance_position_transaction = client.gmx_frf_writer.rebalance_position(
     strategy_account=strategy_account,
-    market="0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0",
+    market=market,
     send_options=options
 )
 receipt = client.gmx_frf_writer.wait_for_transaction(rebalance_position_transaction)
@@ -129,7 +131,7 @@ print("Rebalance position: ", rebalance_position_event)
 
 releverage_position_transaction = client.gmx_frf_writer.releverage_position(
     strategy_account=strategy_account,
-    market="0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0",
+    market=market,
     size_delta_usd=10000,
     send_options=options
 )
@@ -139,9 +141,9 @@ print("Releverage position: ", releverage_position_event)
 
 swap_rebalance_transaction = client.gmx_frf_writer.swap_rebalance(
     strategy_account=strategy_account,
-    market="0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0",
+    market=market,
     callback_config=(
-        "0x614B2EA1Ba52a974c4d270B6E13C8b0Abb8e4cB0",
+        market,
         PUBLIC_KEY,
         1000,
     ),
