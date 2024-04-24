@@ -84,7 +84,6 @@ class GmxFrfEventHandler(ContractHandler):
 
         return handle_event(strategy_account_abi.events.ClaimFundingFees().processReceipt(transaction_receipt))
 
-   
     def handle_cancel_order_event(self, strategy_account, transaction_receipt):
         '''
         Handle and return event emitted when canceling an order.
@@ -100,6 +99,54 @@ class GmxFrfEventHandler(ContractHandler):
         strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
 
         return handle_event(strategy_account_abi.events.CancelOrder().processReceipt(transaction_receipt))
+    
+    def handle_order_executed_event(self, strategy_account, transaction_receipt):
+        '''
+        Handle and return event emitted when order is executed.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param transaction_receipt: required
+        :type transaction_receipt: transactionReceipt
+
+        :returns: AttributeDict
+        '''
+        strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
+
+        return handle_event(strategy_account_abi.events.OrderExecuted().processReceipt(transaction_receipt))
+    
+    def handle_swap_assets_event(self, strategy_account, transaction_receipt):
+        '''
+        Handle and return event emitted when assets are swapped.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param transaction_receipt: required
+        :type transaction_receipt: transactionReceipt
+
+        :returns: AttributeDict
+        '''
+        strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
+
+        return handle_event(strategy_account_abi.events.SwapAssets().processReceipt(transaction_receipt))
+    
+    def handle_withdraw_profit_event(self, strategy_account, transaction_receipt):
+        '''
+        Handle and return event emitted when withdrawing profit.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param transaction_receipt: required
+        :type transaction_receipt: transactionReceipt
+
+        :returns: AttributeDict
+        '''
+        strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
+
+        return handle_event(strategy_account_abi.events.WithdrawProfit().processReceipt(transaction_receipt))
 
     # -----------------------------------------------------------
     # Liquidation Events

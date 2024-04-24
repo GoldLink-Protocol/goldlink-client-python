@@ -1,1 +1,1 @@
-WEB_PROVIDER_URL = 'https://arbitrum-sepolia.blockpi.network/v1/rpc/public'
+WEB_PROVIDER_URL = 'https://rpc.ankr.com/avalanche_fuji'

@@ -1,4 +1,3 @@
-cytoolz==0.12.1
 eth_keys
 eth-account>=0.4.0,<0.6.0
 mpmath==1.0.0

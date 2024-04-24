@@ -1028,6 +1028,11 @@
         "name": "sizeDeltaUsd",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "executionFee",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "outputs": [
@@ -1161,6 +1166,11 @@
       },
       {
         "name": "collateralAmount",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "executionFee",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -1333,6 +1343,11 @@
         "name": "sizeDeltaUsd",
         "type": "uint256",
         "internalType": "uint256"
+      },
+      {
+        "name": "executionFee",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "outputs": [
@@ -1481,6 +1496,11 @@
         "name": "market",
         "type": "address",
         "internalType": "address"
+      },
+      {
+        "name": "executionFee",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "outputs": [
@@ -1614,6 +1634,11 @@
       },
       {
         "name": "sizeDeltaUsd",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "executionFee",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -1759,6 +1784,34 @@
   },
   {
     "type": "function",
+    "name": "executeSwapAssets",
+    "inputs": [
+      {
+        "name": "market",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "longTokenAmountOut",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "callback",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "receiver",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "executeSwapRebalance",
     "inputs": [
       {
@@ -1864,6 +1917,36 @@
   },
   {
     "type": "function",
+    "name": "executeWithdrawProfit",
+    "inputs": [
+      {
+        "name": "params",
+        "type": "tuple",
+        "internalType": "struct WithdrawalLogic.WithdrawProfitParams",
+        "components": [
+          {
+            "name": "market",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "amount",
+            "type": "uint256",
+            "internalType": "uint256"
+          },
+          {
+            "name": "recipient",
+            "type": "address",
+            "internalType": "address"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "getAccountLiquidationStatus",
     "inputs": [],
     "outputs": [
@@ -1918,6 +2001,38 @@
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "lastLiquidationTimestamp_",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "multicall",
+    "inputs": [
+      {
+        "name": "data",
+        "type": "bytes[]",
+        "internalType": "bytes[]"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "results",
+        "type": "bytes[]",
+        "internalType": "bytes[]"
+      }
+    ],
+    "stateMutability": "payable"
   },
   {
     "type": "function",
@@ -2489,6 +2604,25 @@
   },
   {
     "type": "event",
+    "name": "OrderExecuted",
+    "inputs": [
+      {
+        "name": "market",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "orderKey",
+        "type": "bytes32",
+        "indexed": false,
+        "internalType": "bytes32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "ProcessLiquidation",
     "inputs": [
       {
@@ -2676,6 +2810,31 @@
   },
   {
     "type": "event",
+    "name": "SwapAssets",
+    "inputs": [
+      {
+        "name": "asset",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "assetAmountOut",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "usdcAmountIn",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "SwapRebalancePosition",
     "inputs": [
       {
@@ -2724,6 +2883,31 @@
     "inputs": [
       {
         "name": "receiver",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "WithdrawProfit",
+    "inputs": [
+      {
+        "name": "market",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "recipient",
         "type": "address",
         "indexed": true,
         "internalType": "address"
