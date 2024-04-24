@@ -169,7 +169,7 @@ class GmxFrfEventHandler(ContractHandler):
 
         return handle_event(strategy_account_abi.events.ReleveragePosition().processReceipt(transaction_receipt))
     
-    def handle_swap_rebalance_position_event(self, strategy_account, transaction_receipt):
+    def handle_swap_rebalance_event(self, strategy_account, transaction_receipt):
         '''
         Handle and return event emitted when a swap rebalance is performed for a strategy account.
 

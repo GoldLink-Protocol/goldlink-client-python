@@ -98,7 +98,7 @@ class Client(object):
         '''
         Get the GMX Funding-rate Farming strategy event handler module, used for handling events emitted from the protocol.
         '''
-        return self.gmx_frf_event_handler
+        return self._gmx_frf_event_handler
 
     @property
     def writer(self):

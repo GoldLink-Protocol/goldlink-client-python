@@ -1,4 +1,3 @@
-cytoolz==0.12.1
 eth_keys
 eth-account>=0.4.0,<0.6.0
 mpmath==1.0.0
@@ -6,3 +5,4 @@ pytest>=7.0.0
 six>=1.14
 tox>=4.3.4
 web3>=5.0.0,<6.0.0
+python-dotenv==0.17.1
