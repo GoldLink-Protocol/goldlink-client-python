@@ -30,6 +30,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             strategy_account,
             market,
             amount,
+            execution_fee,
             send_options=None
     ):
         '''
@@ -44,6 +45,9 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :param amount: required
         :type amount: integer
 
+        :param execution_fee: required
+        :type execution_fee: integer
+
         :param send_options: optional
         :type send_options: sendOptions
 
@@ -54,7 +58,8 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         return self.send_transaction(
             method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeCreateIncreaseOrder(
                 market=market,
-                collateralAmount=amount
+                collateralAmount=amount,
+                executionFee=execution_fee
             ),
             options=send_options,
         )
@@ -64,6 +69,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             strategy_account,
             market,
             size_delta_usd,
+            execution_fee,
             send_options=None
     ):
         '''
@@ -78,6 +84,9 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :param size_delta_usd: required
         :type size_delta_usd: integer
 
+        :param execution_fee: required
+        :type execution_fee: integer
+
         :param send_options: optional
         :type send_options: sendOptions
 
@@ -88,7 +97,8 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         return self.send_transaction(
             method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeCreateDecreaseOrder(
                 market=market,
-                sizeDeltaUsd=size_delta_usd
+                sizeDeltaUsd=size_delta_usd,
+                executionFee=execution_fee
             ),
             options=send_options,
         )
@@ -195,6 +205,79 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             options=send_options,
         )
     
+    def swap_assets(
+            self,
+            strategy_account,
+            market,
+            long_token_amount_out,
+            callback,
+            receiver,
+            send_options=None
+    ):
+        '''
+        Swap assets for the strategy account.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param market: required
+        :type market: address
+
+        :param long_token_amount_out: required
+        :type long_token_amount_out: integer
+
+        :param callback: required
+        :type callback: address
+
+        :param receiver: required
+        :type receiver: addresss
+
+        :param send_options: optional
+        :type send_options: sendOptions
+
+        :returns: None
+
+        :raise: TransactionReverted
+        '''  
+        return self.send_transaction(
+            method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeSwapAssets(
+                market=market,
+                longTokenAmountOut=long_token_amount_out,
+                callback=callback,
+                receiver=receiver
+            ),
+            options=send_options,
+        )
+    
+    def withdraw_profit(
+            self,
+            strategy_account,
+            params,
+            send_options=None
+    ):
+        '''
+        Swap assets for the strategy account.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param params: required
+        :type params: Object
+
+        :param send_options: optional
+        :type send_options: sendOptions
+
+        :returns: None
+
+        :raise: TransactionReverted
+        '''  
+        return self.send_transaction(
+            method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeWithdrawProfit(
+                params=params
+            ),
+            options=send_options,
+        )
+    
     # -----------------------------------------------------------
     # Liquidation Transactions
     # -----------------------------------------------------------
@@ -248,6 +331,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             strategy_account,
             market,
             size_delta_usd,
+            execution_fee,
             send_options=None
     ):
         '''
@@ -262,6 +346,9 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :param size_delta_usd: required
         :type size_delta_usd: integer
 
+        :param execution_fee: required
+        :type execution_fee: integer
+
         :param send_options: optional
         :type send_options: sendOptions
 
@@ -272,7 +359,8 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         return self.send_transaction(
             method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeLiquidatePosition(
                 market=market,
-                sizeDeltaUsd=size_delta_usd
+                sizeDeltaUsd=size_delta_usd,
+                executionFee=execution_fee
             ),
             options=send_options,
         )
@@ -281,6 +369,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             self,
             strategy_account,
             market,
+            execution_fee,
             send_options=None
     ):
         '''
@@ -291,6 +380,9 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
 
         :param market: required
         :type market: address
+        
+        :param execution_fee: required
+        :type execution_fee: integer
 
         :param send_options: optional
         :type send_options: sendOptions
@@ -301,7 +393,8 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         ''' 
         return self.send_transaction(
             method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeRebalancePosition(
-                market=market
+                market=market,
+                executionFee=execution_fee
             ),
             options=send_options,
         )
@@ -311,6 +404,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             strategy_account,
             market,
             size_delta_usd,
+            execution_fee,
             send_options=None
     ):
         '''
@@ -325,6 +419,9 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :param size_delta_usd: required
         :type size_delta_usd: integer
 
+        :param execution_fee: required
+        :type execution_fee: integer
+
         :param send_options: optional
         :type send_options: sendOptions
 
@@ -335,7 +432,8 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         return self.send_transaction(
             method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeReleveragePosition(
                 market=market,
-                sizeDeltaUsd=size_delta_usd
+                sizeDeltaUsd=size_delta_usd,
+                executionFee=execution_fee
             ),
             options=send_options,
         )
@@ -374,3 +472,35 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             options=send_options,
         )
     
+    # -----------------------------------------------------------
+    # Misc Transactions
+    # -----------------------------------------------------------
+
+    def multi_call(
+            self,
+            strategy_account,
+            data,
+            send_options=None
+    ):
+        '''
+        Make a multi-call for the strategy account.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param data: required
+        :type data: []bytes
+
+        :param send_options: optional
+        :type send_options: sendOptions
+
+        :returns: None
+
+        :raise: TransactionReverted
+        ''' 
+        return self.send_transaction(
+            method=self.get_gmxfrf_strategy_account(strategy_account).functions.multicall(
+                data=data
+            ),
+            options=send_options,
+        )

@@ -1,9 +1,9 @@
 '''
 Example for borrowing. Additionally, only works if
 a lending position had been created. Use `python -m examples.lending` to create a 
-lending position.
+lending position on Fuji.
 
-Usage: python -m examples.borrowing
+Usage: python -m examples.manage_position
 '''
 
 import os
@@ -90,35 +90,7 @@ receipt = client.writer.wait_for_transaction(borrow_transaction)
 borrow_event = client.event_handler.handle_borrow_event(strategy_bank, receipt)
 print("Strategy account borrowed, event: ", borrow_event)
 
-strategy_reserve = client.reader.get_strategy_reserve_for_bank(strategy_bank=strategy_bank)
+# Create position.
+print("Creating ETH position")
 
-# Print effects of borrowing.
-print("Reserve balance: ", client.reader.get_balance_of(erc20, strategy_reserve))
-print("Strategy Bank balance: ", client.reader.get_balance_of(erc20, strategy_bank))
-print("Strategy Account balance: ", client.reader.get_balance_of(erc20, strategy_account))
-print("Borrower balance: ", client.reader.get_balance_of(erc20, PUBLIC_KEY))
-
-# Repay borrow balance.
-print(f"Repaying from strategy account {strategy_account}")
-repay_transaction = client.writer.repay(
-    strategy_account,
-    BORROW_AMOUNT,
-    send_options=options
-)
-receipt = client.writer.wait_for_transaction(repay_transaction)
-repay_event = client.event_handler.handle_repay_event(strategy_bank, receipt)
-print("Strategy account repaid, event: ", repay_event)
-
-# Get the strategy account balance.
-strategy_account_balance = client.reader.get_strategy_account_holdings(strategy_bank, strategy_account)
-
-# Withdraw collateral.
-print(f"Withdrawing collateral from strategy account {strategy_account}")
-withdraw_transaction = client.writer.withdraw_collateral(
-    strategy_account,
-    strategy_account_balance["collateral"],
-    send_options=options
-)
-receipt = client.writer.wait_for_transaction(withdraw_transaction)
-withdraw_collateral_event = client.event_handler.handle_withdraw_collateral_event(strategy_bank, receipt)
-print("Collateral withdrawn, event: ", withdraw_collateral_event)
+# TODO finish
