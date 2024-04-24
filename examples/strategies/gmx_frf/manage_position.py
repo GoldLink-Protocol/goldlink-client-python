@@ -3,7 +3,7 @@ Example for borrowing. Additionally, only works if
 a lending position had been created. Use `python -m examples.lending` to create a 
 lending position on Fuji.
 
-Usage: python -m examples.manage_position
+Usage: python -m examples.strategies.gmx_frf.manage_position
 '''
 
 import os
@@ -24,6 +24,9 @@ COLLATERAL_AMOUNT = 10000000
 # Load in ENVVAR
 PUBLIC_KEY = os.getenv('TEST_OWNER_PUBLIC_KEY')
 PRIVATE_KEY = os.getenv('TEST_OWNER_PRIVATE_KEY')
+
+# Market
+GMX_MARKET="0xD996ff47A1F763E1e55415BC4437c59292D1F415"
 
 # Initialize client.
 client = Client(
@@ -86,6 +89,15 @@ borrow_event = client.event_handler.handle_borrow_event(strategy_bank, receipt)
 print("Strategy account borrowed, event: ", borrow_event)
 
 # Create position.
-print("Creating ETH position")
+print("Creating GMX Market position")
+open_position_transaction = client.gmx_frf_writer.create_increase_order(
+    strategy_account=strategy_account,
+    market=GMX_MARKET,
+    amount=10000,
+    execution_fee=100000,
+    send_options=options
+)
+receipt = client.gmx_frf_writer.wait_for_transaction(open_position_transaction)
+print("Create increase order event: ", client.gmx_frf_event_handler.handle_create_increase_order_event(strategy_account, receipt))
 
 # TODO finish
