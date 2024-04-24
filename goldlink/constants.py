@@ -1,9 +1,14 @@
 """Constants used in the GoldLink Client."""
 
-# ------------ Arbitrum Network IDs ------------
+# ------------  Network IDs ------------
 NETWORK_ID_MAINNET = 42161
 NETWORK_ID_FUJI = 43113
 NETWORK_ID_ANVIL = 31337
+
+# ------------  Provider URLs ------------
+
+WEB_PROVIDER_URL_FUJI = 'https://rpc.ankr.com/avalanche_fuji'
+
 
 # ------------ Signature Types ------------
 SIGNATURE_TYPE_NO_PREPEND = 0

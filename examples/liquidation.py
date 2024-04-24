@@ -9,9 +9,7 @@ from web3 import Web3
 from dotenv import load_dotenv
 
 from goldlink import Client
-from goldlink.constants import NETWORK_ID_FUJI
-
-from examples.constants import WEB_PROVIDER_URL
+from goldlink.constants import NETWORK_ID_FUJI, WEB_PROVIDER_URL_FUJI
 
 ## Fuji Contracts
 ## Controller: https://testnet.snowtrace.io/address/0xD70e13Ad0C3ba99c09a6130602C30Aac0dF41dA9
@@ -29,7 +27,7 @@ STRATEGY_ACCOUNT = os.getenv('LIQUIDATABLE_STRATEGY_ACCOUNT')
 # Initialize client.
 client = Client(
     network_id=NETWORK_ID_FUJI,
-    web3=Web3(Web3.HTTPProvider(WEB_PROVIDER_URL)),
+    web3=Web3(Web3.HTTPProvider(WEB_PROVIDER_URL_FUJI)),
     private_key=PRIVATE_KEY,
     default_address=PUBLIC_KEY,
 )
