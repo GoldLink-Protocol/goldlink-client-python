@@ -78,7 +78,6 @@ class ContractHandler(object):
 
         :returns: Object
         '''
-
         if strategy_account not in self.cached_gmx_frf_accounts and strategy_account in self.cached_contracts:
             del self.cached_contracts[strategy_account]
         
@@ -86,6 +85,17 @@ class ContractHandler(object):
         self.cached_gmx_frf_accounts[strategy_account] = strategy_obj
 
         return strategy_obj
+    
+    def get_gmxfrf_strategy_manager(self, strategy_manager):
+        '''
+        Get ABI of the GmxFrfStrategyManager.
+
+        :param strategy_manager: required
+        :type strategy_manager: address
+
+        :returns: Object
+        '''
+        return self.get_contract(strategy_manager, Constants.GMX_FRF_STRATEGY_MANAGER_ABI)
     
     # -----------------------------------------------------------
     # Utility Functions
