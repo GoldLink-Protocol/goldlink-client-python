@@ -7,6 +7,7 @@ REQUIREMENTS = [
     'eth_keys',
     'eth-account>=0.4.0,<0.6.0',
     'mpmath==1.0.0',
+    'python-dotenv==0.17.1',
     'web3>=5.0.0,<6.0.0',
 ]
 

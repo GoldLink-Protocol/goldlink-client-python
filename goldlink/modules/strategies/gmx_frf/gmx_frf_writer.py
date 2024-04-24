@@ -160,8 +160,8 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         ''' 
         return self.send_transaction(
             method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeClaimFundingFees(
-                markets=markets,
-                assets=assets
+                markets,
+                assets
             ),
             options=send_options,
         )
