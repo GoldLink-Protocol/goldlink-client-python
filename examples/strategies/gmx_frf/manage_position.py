@@ -41,63 +41,77 @@ strategy_bank = constants.CONTRACTS[constants.BANK][constants.NETWORK_ID_FUJI]
 erc20 = client.reader.get_strategy_asset(strategy_bank=strategy_bank)
 
 options = {
-    'gasPrice': 25000000000
+    'gasPrice': 25000000000,
+    'value': 25000000000
 }
 
-print(f"Deploying strategy account for strategy bank {strategy_bank}")
-open_transaction = client.writer.open_account(
-    strategy_bank=strategy_bank, 
-    send_options=options
-)
-receipt = client.writer.wait_for_transaction(open_transaction)
-openAccountEvent = client.event_handler.handle_open_account_event(
-    strategy_bank,
-    receipt
-)
-strategy_account = openAccountEvent["strategyAccount"]
-print(f"Strategy account deployed, address {strategy_account}")
+# print(f"Deploying strategy account for strategy bank {strategy_bank}")
+# open_transaction = client.writer.open_account(
+#     strategy_bank=strategy_bank, 
+#     send_options=options
+# )
+# receipt = client.writer.wait_for_transaction(open_transaction)
+# openAccountEvent = client.event_handler.handle_open_account_event(
+#     strategy_bank,
+#     receipt
+# )
+# strategy_account = openAccountEvent["strategyAccount"]
+# print(f"Strategy account deployed, address {strategy_account}")
 
-# Set approval for strategy account to pull funds from this wallet.
-print(f"Approve strategy account {strategy_account} to pull collateral")
-approve_transaction = client.writer.approve_address(
-    address=strategy_bank, 
-    amount=BORROW_AMOUNT * 10, 
-    erc20=erc20,
-    send_options=options
-)
-client.writer.wait_for_transaction(approve_transaction)
-print("Add collateral approved")
+# # Set approval for strategy account to pull funds from this wallet.
+# print(f"Approve strategy account {strategy_account} to pull collateral")
+# approve_transaction = client.writer.approve_address(
+#     address=strategy_bank, 
+#     amount=BORROW_AMOUNT * 10, 
+#     erc20=erc20,
+#     send_options=options
+# )
+# client.writer.wait_for_transaction(approve_transaction)
+# print("Add collateral approved")
 
-print(f"Adding collateral to strategy account {strategy_account}")
-add_collateral_transaction = client.writer.add_collateral(
-    strategy_account=strategy_account,
-    amount=COLLATERAL_AMOUNT,
-    send_options=options
-)
-receipt = client.writer.wait_for_transaction(add_collateral_transaction)
-print("Collateral added, event: ", client.event_handler.handle_add_collateral_event(strategy_bank, receipt))
+# print(f"Adding collateral to strategy account {strategy_account}")
+# add_collateral_transaction = client.writer.add_collateral(
+#     strategy_account=strategy_account,
+#     amount=COLLATERAL_AMOUNT,
+#     send_options=options
+# )
+# receipt = client.writer.wait_for_transaction(add_collateral_transaction)
+# print("Collateral added, event: ", client.event_handler.handle_add_collateral_event(strategy_bank, receipt))
 
-# Create borrow balance.
-print("Borrowing into strategy account")
-borrow_transaction = client.writer.borrow(
-    strategy_account,
-    BORROW_AMOUNT,
-    send_options=options
-)
-receipt = client.writer.wait_for_transaction(borrow_transaction)
-borrow_event = client.event_handler.handle_borrow_event(strategy_bank, receipt)
-print("Strategy account borrowed, event: ", borrow_event)
+# # Create borrow balance.
+# print("Borrowing into strategy account")
+# borrow_transaction = client.writer.borrow(
+#     strategy_account,
+#     BORROW_AMOUNT,
+#     send_options=options
+# )
+# receipt = client.writer.wait_for_transaction(borrow_transaction)
+# borrow_event = client.event_handler.handle_borrow_event(strategy_bank, receipt)
+# print("Strategy account borrowed, event: ", borrow_event)
+
+strategy_account = "0x518F1C560789DF8120f1c7Bc2613f5Eb97408173"
+print(client.reader.get_account_value(strategy_account=strategy_account))
 
 # Create position.
 print("Creating GMX Market position")
 open_position_transaction = client.gmx_frf_writer.create_increase_order(
     strategy_account=strategy_account,
     market=GMX_MARKET,
-    amount=10000,
-    execution_fee=100000,
+    amount=100000000,
+    execution_fee=2500000000000,
     send_options=options
 )
 receipt = client.gmx_frf_writer.wait_for_transaction(open_position_transaction)
 print("Create increase order event: ", client.gmx_frf_event_handler.handle_create_increase_order_event(strategy_account, receipt))
 
-# TODO finish
+# Decrease position.
+print("Decreasing GMX Market position")
+# decrease_position_transaction = client.gmx_frf_writer.create_decrease_order(
+#     strategy_account=strategy_account,
+#     market=GMX_MARKET,
+#     size_delta_usd=100000000,
+#     execution_fee=2500000000000,
+#     send_options=options
+# )
+# receipt = client.gmx_frf_writer.wait_for_transaction(decrease_position_transaction)
+# print("Create decrease order event: ", client.gmx_frf_event_handler.handle_create_decrease_order_event(strategy_account, receipt))

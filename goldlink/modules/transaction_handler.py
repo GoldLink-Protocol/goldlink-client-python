@@ -175,7 +175,14 @@ class TransactionHandler():
         '''
         transaction_receipt = self.web3.eth.waitForTransactionReceipt(transaction_hash)
         if transaction_receipt['status'] == 0:
-            raise TransactionReverted(transaction_receipt)
+            replay_tx = {
+                'to': transaction_receipt['to'],
+                'from': transaction_receipt['from']
+            }
+            try:
+                self.web3.eth.call(replay_tx, transaction_receipt.blockNumber - 1)
+            except Exception as e: 
+                raise TransactionReverted(e)
         
         return transaction_receipt
         
