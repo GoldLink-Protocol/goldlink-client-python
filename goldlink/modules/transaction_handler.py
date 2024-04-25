@@ -82,6 +82,7 @@ class TransactionHandler():
 
         # Sign and send transaction.
         signed = self.sign_transaction(method, options)
+        print(signed)
         try:
             transaction_hash = self.web3.eth.sendRawTransaction(signed.rawTransaction)
         except ValueError as error:
@@ -175,14 +176,7 @@ class TransactionHandler():
         '''
         transaction_receipt = self.web3.eth.waitForTransactionReceipt(transaction_hash)
         if transaction_receipt['status'] == 0:
-            replay_tx = {
-                'to': transaction_receipt['to'],
-                'from': transaction_receipt['from']
-            }
-            try:
-                self.web3.eth.call(replay_tx, transaction_receipt.blockNumber - 1)
-            except Exception as e: 
-                raise TransactionReverted(e)
+            raise TransactionReverted(transaction_receipt)
         
         return transaction_receipt
         

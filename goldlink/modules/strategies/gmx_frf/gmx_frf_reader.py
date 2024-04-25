@@ -1,6 +1,7 @@
 """Module providing access to methods for reading from GoldLink Contracts for the GMX Funding-rate Farming strategy."""
 
 from goldlink.modules.contract_handler import ContractHandler
+from goldlink import constants
 
 class GmxFrfReader(ContractHandler):
     '''
@@ -269,9 +270,12 @@ class GmxFrfReader(ContractHandler):
         '''
         return self.get_gmxfrf_strategy_account(strategy_account).functions.getAccountLiquidationStatus().call()
 
-    def get_account_orders_value_usd(self, strategy_manager, strategy_account):
+    def get_account_orders_value_usd(self, account_getters, strategy_manager, strategy_account):
         '''
         Get an account's order value in USD.
+
+        :param account_getters: required
+        :type account_getters: address
 
         :param strategy_manager: required
         :type strategy_manager: address
@@ -281,3 +285,61 @@ class GmxFrfReader(ContractHandler):
 
         :returns: integer
         '''
+        return self.get_gmxfrf_account_getters(account_getters).functions.getAccountOrdersValueUSD(strategy_manager, strategy_account).call()
+
+    def get_account_positions_value_usd(self, account_getters, strategy_manager, strategy_account):
+        '''
+        Get an account's positions' value in USD.
+
+        :param account_getters: required
+        :type account_getters: address
+
+        :param strategy_manager: required
+        :type strategy_manager: address
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :returns: integer
+        '''
+        return self.get_gmxfrf_account_getters(account_getters).functions.getAccountPositionsValueUSD(strategy_manager, strategy_account).call()
+
+    def get_settled_funding_fees(
+            self, 
+            account_getters, 
+            data_store, 
+            strategy_account, 
+            market, 
+            short_token,
+            long_token,
+        ):
+        '''
+        Get an account's settled funding fees for a market
+
+        :param account_getters: required
+        :type account_getters: address
+
+        :param data_store: required
+        :type data_store: address
+        
+        :param strategy_account: required
+        :type strategy_account: address
+        
+        :param market: required
+        :type market: address
+
+        :param short_token: required
+        :type short_token: address
+
+        :param long_token: required
+        :type long_token: address
+
+        :returns: Object
+        '''
+        return self.get_gmxfrf_account_getters(account_getters).functions.getSettledFundingFees(
+            dataStore=data_store,
+            account=strategy_account,
+            market=market,
+            shortToken=short_token,
+            longToken=long_token
+        )

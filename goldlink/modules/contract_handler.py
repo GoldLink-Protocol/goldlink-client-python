@@ -2,6 +2,8 @@
 
 import json
 import os
+from eth_abi.registry import ABIRegistry
+from eth_abi.codec import ABICodec
 
 import goldlink.constants as Constants
 
@@ -16,6 +18,23 @@ class ContractHandler(object):
     ):
         # Set web3.
         self.web3 = web3
+
+        # goldlink_folder = os.path.join(
+        #     os.path.dirname(os.path.abspath(__file__)),
+        #     '..',
+        # )
+
+        # i_gmx_frf_manager_abi=json.load(open(os.path.join(goldlink_folder, Constants.I_GMX_FRF_STRATEGY_MANAGER_ABI), 'r'))
+        # igmxf_strategy_manager_type = str
+
+        # # Create a new registry
+        # registry = ABIRegistry()
+
+        # # Register the type in the registry
+        # registry.register(igmxf_strategy_manager_type, lambda x: x, lambda x: x)
+
+        # # Set the registry as the codec for Web3
+        # self.web3.codec = ABICodec(registry)
 
         # Initialize empty cached contracts.
         self.cached_contracts = {}
@@ -96,6 +115,17 @@ class ContractHandler(object):
         :returns: Object
         '''
         return self.get_contract(strategy_manager, Constants.GMX_FRF_STRATEGY_MANAGER_ABI)
+
+    def get_gmxfrf_account_getters(self, account_getters):
+        '''
+        Get ABI of the GmxFrfAccountGetters.
+
+        :param account_getters: required
+        :type account_getters: address
+
+        :returns: Object
+        '''
+        return self.get_contract(account_getters, Constants.GMX_FRF_ACCOUNT_GETTERS_ABI)
     
     # -----------------------------------------------------------
     # Utility Functions
