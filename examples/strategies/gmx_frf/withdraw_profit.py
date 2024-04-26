@@ -1,5 +1,6 @@
 '''
-Example for increasing a position. Additionally, only works if account has profit to withdraw.
+Example for increasing a position. Additionally, only works if account has profit to withdraw, the market is
+not overly short and the profit respects the buffer.
 
 Usage: python -m examples.strategies.gmx_frf.withdraw_profit
 '''
@@ -34,23 +35,25 @@ options = {
     'gasPrice': 25000000000
 }
 
-print(client.reader.get_account_value(strategy_account=STRATEGY_ACCOUNT))
-
 manager = CONTRACTS[MANAGER][constants.NETWORK_ID_FUJI]
 account_getters = CONTRACTS[ACCOUNT_GETTERS][constants.NETWORK_ID_FUJI]
 
-# Withdraw profit.
-# print("Available markets: ", client.gmx_frf_reader.get_available_markets(strategy_manager=manager))
-print("getter: ", client.gmx_frf_reader.get_account_positions_value_usd(account_getters=account_getters, strategy_manager=manager, strategy_account=STRATEGY_ACCOUNT))
-# print("Withdrawing profit")
-# withdraw_profit_transaction = client.gmx_frf_writer.withdraw_profit(
-#     strategy_account=STRATEGY_ACCOUNT,
-#     params={
-#         'market': GMX_MARKET,
-#         'amount': 0,
-#         'recipient': PUBLIC_KEY
-#     },
-#     send_options=options
-# )
-# receipt = client.gmx_frf_writer.wait_for_transaction(withdraw_profit_transaction)
-# print("Withdraw profit event: ", client.gmx_frf_event_handler.handle_withdraw_profit_event(STRATEGY_ACCOUNT, receipt))
+client.gmx_frf_reader.get_account_orders_value_usd(
+    account_getters=account_getters,
+    strategy_manager=manager,
+    strategy_account=STRATEGY_ACCOUNT,
+)
+
+# # Withdraw profit.
+print("Withdrawing profit")
+withdraw_profit_transaction = client.gmx_frf_writer.withdraw_profit(
+    strategy_account=STRATEGY_ACCOUNT,
+    params={
+        'market': GMX_MARKET,
+        'amount': 1000,
+        'recipient': PUBLIC_KEY
+    },
+    send_options=options
+)
+receipt = client.gmx_frf_writer.wait_for_transaction(withdraw_profit_transaction)
+print("Withdraw profit event: ", client.gmx_frf_event_handler.handle_withdraw_profit_event(STRATEGY_ACCOUNT, receipt))

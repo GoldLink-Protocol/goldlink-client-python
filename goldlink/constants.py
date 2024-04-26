@@ -57,7 +57,6 @@ STRATEGY_RESERVE_ABI = 'abi/strategy-reserve.json'
 
 # ------------ GoldLink Protocol GMX FRF ABI Paths ------------
 
-I_GMX_FRF_STRATEGY_MANAGER_ABI = 'abi/i-gmx-frf-strategy-manager.json'
 GMX_FRF_STRATEGY_ACCOUNT_ABI = 'abi/gmx-frf-strategy-account.json'
 GMX_FRF_STRATEGY_MANAGER_ABI = 'abi/gmx-frf-strategy-manager.json'
 GMX_FRF_ACCOUNT_GETTERS_ABI = 'abi/gmx-frf-account-getters.json'

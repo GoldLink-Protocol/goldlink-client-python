@@ -285,7 +285,7 @@ class GmxFrfReader(ContractHandler):
 
         :returns: integer
         '''
-        return self.get_gmxfrf_account_getters(account_getters).functions.getAccountOrdersValueUSD(strategy_manager, strategy_account).call()
+        return self.get_gmxfrf_account_getters(account_getters).functions.getAccountOrdersValueUSD(manager=strategy_manager, account=strategy_account).call()
 
     def get_account_positions_value_usd(self, account_getters, strategy_manager, strategy_account):
         '''
@@ -303,6 +303,24 @@ class GmxFrfReader(ContractHandler):
         :returns: integer
         '''
         return self.get_gmxfrf_account_getters(account_getters).functions.getAccountPositionsValueUSD(strategy_manager, strategy_account).call()
+
+    def get_account_value_usdc(self, account_getters, strategy_manager, strategy_account):
+        '''
+        Get an account's value in USDC.
+
+        :param account_getters: required
+        :type account_getters: address
+
+        :param strategy_manager: required
+        :type strategy_manager: address
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :returns: integer
+        '''
+        return self.get_gmxfrf_account_getters(account_getters).functions.getAccountValueUsdc(strategy_manager, strategy_account).call()
+
 
     def get_settled_funding_fees(
             self, 
@@ -343,3 +361,90 @@ class GmxFrfReader(ContractHandler):
             shortToken=short_token,
             longToken=long_token
         )
+    
+    def get_settled_funding_fees_value_usd(
+            self, 
+            account_getters, 
+            manager, 
+            strategy_account
+        ):
+        '''
+        Get an account's settled funding fees total USD value.
+
+        :param account_getters: required
+        :type account_getters: address
+
+        :param manager: required
+        :type manager: address
+        
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :returns: integer
+        '''
+        return self.get_gmxfrf_account_getters(account_getters).functions.getSettledFundingFeesValueUSD(
+            manager=manager,
+            account=strategy_account
+        )
+    
+    def get_is_liquidation_finished(self, account_getters, manager, strategy_account):
+        '''
+        Get if an account is not in a liquidation state.
+
+        :param account_getters: required
+        :type account_getters: address
+
+        :param manager: required
+        :type manager: address
+        
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :returns: boolean
+        '''
+        return self.get_gmxfrf_account_getters(account_getters).functions.isLiquidationFinished(
+            manager=manager,
+            account=strategy_account
+        )
+    
+
+    # -----------------------------------------------------------
+    # Individual Order/Position Querying Functions
+    # -----------------------------------------------------------
+
+    def get_order_value_usd(self, account_getters, strategy_manager, order_id):
+        '''
+        Get an order's value in USD.
+
+        :param account_getters: required
+        :type account_getters: address
+
+        :param strategy_manager: required
+        :type strategy_manager: address
+
+        :param order_id: required
+        :type order_id: bytes
+
+        :returns: integer
+        '''
+        return self.get_gmxfrf_account_getters(account_getters).functions.getOrderValueUSD(strategy_manager, order_id).call()
+
+    def get_position_value_usd(self, account_getters, strategy_manager, strategy_account, market):
+        '''
+        Get a position's value in USD.
+
+        :param account_getters: required
+        :type account_getters: address
+
+        :param strategy_manager: required
+        :type strategy_manager: address
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param market: required
+        :type market: address
+
+        :returns: integer
+        '''
+        return self.get_gmxfrf_account_getters(account_getters).functions.getPositionValue(strategy_manager, strategy_account, market).call()

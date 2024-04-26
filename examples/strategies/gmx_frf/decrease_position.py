@@ -3,7 +3,7 @@ Example for decreasing a position. Additionally, only works if
 a GMX position had been created. Use `python -m examples.strategies.gmx_frf.increase_position` to create a 
 GMX position on Fuji.
 
-Usage: python -m examples.strategies.gmx_frf.strategies.gmx_frf.decrease_position
+Usage: python -m examples.strategies.gmx_frf.decrease_position
 '''
 
 import os

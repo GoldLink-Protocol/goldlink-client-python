@@ -51,7 +51,6 @@ class GmxFrfEventHandler(ContractHandler):
 
         return handle_event(strategy_account_abi.events.CreateDecreaseOrder().processReceipt(transaction_receipt))
 
-
     def handle_claim_collateral_event(self, strategy_account, transaction_receipt):
         '''
         Handle and return event emitted when claiming collateral.
@@ -116,6 +115,22 @@ class GmxFrfEventHandler(ContractHandler):
 
         return handle_event(strategy_account_abi.events.OrderExecuted().processReceipt(transaction_receipt))
     
+    def handle_order_cancelled_event(self, strategy_account, transaction_receipt):
+        '''
+        Handle and return event emitted when and order is cancelled.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param transaction_receipt: required
+        :type transaction_receipt: transactionReceipt
+
+        :returns: AttributeDict
+        '''
+        strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
+
+        return handle_event(strategy_account_abi.events.OrderCancelled().processReceipt(transaction_receipt))
+
     def handle_swap_assets_event(self, strategy_account, transaction_receipt):
         '''
         Handle and return event emitted when assets are swapped.
