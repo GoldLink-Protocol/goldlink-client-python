@@ -82,7 +82,6 @@ class TransactionHandler():
 
         # Sign and send transaction.
         signed = self.sign_transaction(method, options)
-        print(signed)
         try:
             transaction_hash = self.web3.eth.sendRawTransaction(signed.rawTransaction)
         except ValueError as error:

@@ -37,7 +37,7 @@ options = {
     'value': 2500000000000000000
 }
 
-# Decrease position.
+# Increase position.
 print("Increasing GMX Market position")
 increase_position_transaction = client.gmx_frf_writer.create_increase_order(
     strategy_account=STRATEGY_ACCOUNT,

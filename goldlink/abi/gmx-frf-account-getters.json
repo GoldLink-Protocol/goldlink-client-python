@@ -5,7 +5,7 @@
     "inputs": [
       {
         "name": "manager",
-        "type": "address",
+        "type": "IGmxFrfStrategyManager",
         "internalType": "contract IGmxFrfStrategyManager"
       },
       {
@@ -29,7 +29,7 @@
     "inputs": [
       {
         "name": "manager",
-        "type": "address",
+        "type": "IGmxFrfStrategyManager",
         "internalType": "contract IGmxFrfStrategyManager"
       },
       {
@@ -53,7 +53,7 @@
     "inputs": [
       {
         "name": "manager",
-        "type": "address",
+        "type": "IGmxFrfStrategyManager",
         "internalType": "contract IGmxFrfStrategyManager"
       },
       {
@@ -77,7 +77,7 @@
     "inputs": [
       {
         "name": "manager",
-        "type": "address",
+        "type": "IGmxFrfStrategyManager",
         "internalType": "contract IGmxFrfStrategyManager"
       },
       {
@@ -101,7 +101,7 @@
     "inputs": [
       {
         "name": "manager",
-        "type": "address",
+        "type": "IGmxFrfStrategyManager",
         "internalType": "contract IGmxFrfStrategyManager"
       },
       {
@@ -130,7 +130,7 @@
     "inputs": [
       {
         "name": "dataStore",
-        "type": "address",
+        "type": "IGmxV2DataStore",
         "internalType": "contract IGmxV2DataStore"
       },
       {
@@ -174,7 +174,7 @@
     "inputs": [
       {
         "name": "manager",
-        "type": "address",
+        "type": "IGmxFrfStrategyManager",
         "internalType": "contract IGmxFrfStrategyManager"
       },
       {
@@ -198,7 +198,7 @@
     "inputs": [
       {
         "name": "manager",
-        "type": "address",
+        "type": "IGmxFrfStrategyManager",
         "internalType": "contract IGmxFrfStrategyManager"
       },
       {

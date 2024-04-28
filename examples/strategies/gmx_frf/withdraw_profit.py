@@ -1,5 +1,5 @@
 '''
-Example for increasing a position. Additionally, only works if account has profit to withdraw, the market is
+Example for withdrawing profit. Additionally, only works if account has profit to withdraw, the market is
 not overly short and the profit respects the buffer.
 
 Usage: python -m examples.strategies.gmx_frf.withdraw_profit
@@ -38,13 +38,15 @@ options = {
 manager = CONTRACTS[MANAGER][constants.NETWORK_ID_FUJI]
 account_getters = CONTRACTS[ACCOUNT_GETTERS][constants.NETWORK_ID_FUJI]
 
-client.gmx_frf_reader.get_account_orders_value_usd(
+# Get current position value.
+print(client.gmx_frf_reader.get_position_value_usd(
     account_getters=account_getters,
     strategy_manager=manager,
     strategy_account=STRATEGY_ACCOUNT,
-)
+    market=GMX_MARKET
+))
 
-# # Withdraw profit.
+# Withdraw profit.
 print("Withdrawing profit")
 withdraw_profit_transaction = client.gmx_frf_writer.withdraw_profit(
     strategy_account=STRATEGY_ACCOUNT,
