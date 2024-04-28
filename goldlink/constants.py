@@ -51,8 +51,12 @@ DEFAULT_API_TIMEOUT = 3000
 
 # ------------ GoldLink Protocol ABI Paths ------------
 ERC20 = 'abi/erc20.json'
-GMX_FRF_STRATEGY_ACCOUNT_ABI = 'abi/gmx-frf-strategy-account.json'
-GMX_FRF_STRATEGY_MANAGER_ABI = 'abi/gmx-frf-strategy-manager.json'
 STRATEGY_ACCOUNT_ABI = 'abi/strategy-account.json'
 STRATEGY_BANK_ABI = 'abi/strategy-bank.json'
 STRATEGY_RESERVE_ABI = 'abi/strategy-reserve.json'
+
+# ------------ GoldLink Protocol GMX FRF ABI Paths ------------
+
+GMX_FRF_STRATEGY_ACCOUNT_ABI = 'abi/gmx-frf-strategy-account.json'
+GMX_FRF_STRATEGY_MANAGER_ABI = 'abi/gmx-frf-strategy-manager.json'
+GMX_FRF_ACCOUNT_GETTERS_ABI = 'abi/gmx-frf-account-getters.json'

@@ -96,6 +96,17 @@ class ContractHandler(object):
         :returns: Object
         '''
         return self.get_contract(strategy_manager, Constants.GMX_FRF_STRATEGY_MANAGER_ABI)
+
+    def get_gmxfrf_account_getters(self, account_getters):
+        '''
+        Get ABI of the GmxFrfAccountGetters.
+
+        :param account_getters: required
+        :type account_getters: address
+
+        :returns: Object
+        '''
+        return self.get_contract(account_getters, Constants.GMX_FRF_ACCOUNT_GETTERS_ABI)
     
     # -----------------------------------------------------------
     # Utility Functions

@@ -2148,6 +2148,12 @@
         "type": "address[]",
         "indexed": false,
         "internalType": "address[]"
+      },
+      {
+        "name": "claimedAmounts",
+        "type": "uint256[]",
+        "indexed": false,
+        "internalType": "uint256[]"
       }
     ],
     "anonymous": false
@@ -2461,6 +2467,12 @@
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
+      },
+      {
+        "name": "usdcAmountIn",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
     "anonymous": false
@@ -2604,14 +2616,21 @@
   },
   {
     "type": "event",
-    "name": "OrderExecuted",
+    "name": "OrderCancelled",
     "inputs": [
       {
-        "name": "market",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
+        "name": "orderKey",
+        "type": "bytes32",
+        "indexed": false,
+        "internalType": "bytes32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OrderExecuted",
+    "inputs": [
       {
         "name": "orderKey",
         "type": "bytes32",
@@ -2661,6 +2680,118 @@
         "type": "address",
         "indexed": true,
         "internalType": "address"
+      },
+      {
+        "name": "order",
+        "type": "tuple",
+        "indexed": false,
+        "internalType": "struct IGmxV2OrderTypes.CreateOrderParams",
+        "components": [
+          {
+            "name": "addresses",
+            "type": "tuple",
+            "internalType": "struct IGmxV2OrderTypes.CreateOrderParamsAddresses",
+            "components": [
+              {
+                "name": "receiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "callbackContract",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "uiFeeReceiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "market",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "initialCollateralToken",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "swapPath",
+                "type": "address[]",
+                "internalType": "address[]"
+              }
+            ]
+          },
+          {
+            "name": "numbers",
+            "type": "tuple",
+            "internalType": "struct IGmxV2OrderTypes.CreateOrderParamsNumbers",
+            "components": [
+              {
+                "name": "sizeDeltaUsd",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "initialCollateralDeltaAmount",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "triggerPrice",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "acceptablePrice",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "executionFee",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "callbackGasLimit",
+                "type": "uint256",
+                "internalType": "uint256"
+              },
+              {
+                "name": "minOutputAmount",
+                "type": "uint256",
+                "internalType": "uint256"
+              }
+            ]
+          },
+          {
+            "name": "orderType",
+            "type": "uint8",
+            "internalType": "enum IGmxV2OrderTypes.OrderType"
+          },
+          {
+            "name": "decreasePositionSwapType",
+            "type": "uint8",
+            "internalType": "enum IGmxV2OrderTypes.DecreasePositionSwapType"
+          },
+          {
+            "name": "isLong",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "shouldUnwrapNativeToken",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "referralCode",
+            "type": "bytes32",
+            "internalType": "bytes32"
+          }
+        ]
       },
       {
         "name": "orderKey",
@@ -2848,6 +2979,18 @@
         "type": "address",
         "indexed": true,
         "internalType": "address"
+      },
+      {
+        "name": "rebalanceAmount",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "usdcAmountIn",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
     "anonymous": false
