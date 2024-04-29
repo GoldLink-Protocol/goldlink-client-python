@@ -11,7 +11,6 @@ from web3 import Web3
 from dotenv import load_dotenv
 
 from goldlink import Client
-from goldlink.modules.strategies.gmx_frf.constants import MANAGER, ACCOUNT_GETTERS, CONTRACTS
 from goldlink import constants
 
 load_dotenv()
