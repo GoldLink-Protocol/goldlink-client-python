@@ -63,12 +63,15 @@ class Reader(ContractHandler):
         '''
         return  self.get_strategy_bank(strategy_bank).functions.STRATEGY_RESERVE().call()
     
-    def get_strategy_accounts_for_bank(self, strategy_bank, addresss):
+    def get_strategy_accounts_for_bank(self, strategy_bank, address=None):
         '''
         Get address of every strategy account for a bank.
 
         :param strategy_bank: required
         :type strategy_bank: address
+
+        :param account: optional
+        :type account: address
 
         :returns: []address
         '''
@@ -77,7 +80,7 @@ class Reader(ContractHandler):
         for strategy_account in strategy_account_address:
            strategy_account_object = self.get_strategy_account(strategy_account)
 
-           if strategy_account_object.functions.getOwner() == addresss or self.default_address:
+           if strategy_account_object.functions.getOwner() == address or self.default_address:
                self.owned_accounts.push(strategy_account)
 
         return strategy_account_address
