@@ -256,7 +256,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             send_options=None
     ):
         '''
-        Swap assets for the strategy account.
+        Withdraw profit from a strategy account.
 
         :param strategy_account: required
         :type strategy_account: address
