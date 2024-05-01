@@ -166,7 +166,7 @@ class Reader(ContractHandler):
         :param strategy_account: address
         :type strategy_account: address
 
-        :returns: integer
+        :returns: integer, 0 == not liquidatable
         '''
         return self.get_strategy_account(strategy_account).functions.getAccountLiquidationStatus().call()
 
