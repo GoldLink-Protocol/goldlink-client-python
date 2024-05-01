@@ -259,17 +259,6 @@ class GmxFrfReader(ContractHandler):
     # Account Querying Functions
     # -----------------------------------------------------------
 
-    def get_account_liquidation_status(self, strategy_account):
-        '''
-        Get an account's liquidation status.
-
-        :param strategy_account: required
-        :type strategy_account: address
-
-        :returns: integer, 0 == not liquidatable
-        '''
-        return self.get_gmxfrf_strategy_account(strategy_account).functions.getAccountLiquidationStatus().call()
-
     def get_account_orders_value_usd(self, account_getters, strategy_manager, strategy_account):
         '''
         Get an account's order value in USD.
