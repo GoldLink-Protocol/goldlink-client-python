@@ -13,19 +13,29 @@ class Writer(ContractHandler, TransactionHandler):
         self,
         web3,
         private_key,
+        send_options,
         default_address,
-        send_options
+        strategy_bank=None,
+        strategy_reserve=None,
+        strategy_account=None,
     ):
         ContractHandler.__init__(self, web3)
         TransactionHandler.__init__(self, web3, private_key, default_address, send_options)
 
-        self.default_address = default_address
+        self.strategy_account = None
+
+        if strategy_bank:
+            self.strategy_bank = self.get_strategy_bank(strategy_bank)
+        if strategy_reserve:
+            self.strategy_reserve = self.get_strategy_reserve(strategy_reserve)
+        if strategy_account:
+            self.set_strategy_account(strategy_account)
 
     # -----------------------------------------------------------
     # General Transactions
     # -----------------------------------------------------------
 
-    def approve_address(
+    def approve(
             self,
             address,
             amount,
@@ -67,7 +77,7 @@ class Writer(ContractHandler, TransactionHandler):
         send_options=None
     ):
         '''
-        Transfer the allowed asset for the GoldLink Protocol to another address.
+        Transfer erc20 to another address.
 
         :param to: required
         :type to: address
@@ -100,8 +110,7 @@ class Writer(ContractHandler, TransactionHandler):
     def deposit(
         self,
         amount,
-        strategy_reserve,
-        on_behalf_of=None,
+        on_behalf_of,
         send_options=None
     ):
         '''
@@ -110,10 +119,7 @@ class Writer(ContractHandler, TransactionHandler):
         :param amount: required
         :type amount: integer
 
-        :param strategy_reserve: required
-        :type strategy_reserve: address
-
-        :param on_behalf_of: optional
+        :param on_behalf_of: required
         :type on_behalf_of: address
 
         :param send_options: optional
@@ -124,9 +130,9 @@ class Writer(ContractHandler, TransactionHandler):
         :raises: TransactionReverted
         '''
         return self.send_transaction(
-            method=self.get_strategy_reserve(strategy_reserve).functions.deposit(
+            method=self.strategy_reserve.functions.deposit(
                 assets=amount,
-                receiver=on_behalf_of or self.default_address
+                receiver=on_behalf_of
             ),
             options=send_options,
         )
@@ -134,8 +140,7 @@ class Writer(ContractHandler, TransactionHandler):
     def mint(
         self,
         shares,
-        strategy_reserve,
-        on_behalf_of=None,
+        on_behalf_of,
         send_options=None
     ):
         '''
@@ -144,10 +149,7 @@ class Writer(ContractHandler, TransactionHandler):
         :param shares: required
         :type shares: integer
 
-        :param strategy_reserve: required
-        :type strategy_reserve: address
-
-        :param on_behalf_of: optional
+        :param on_behalf_of: required
         :type on_behalf_of: address
 
         :param send_options: optional
@@ -158,9 +160,9 @@ class Writer(ContractHandler, TransactionHandler):
         :raises: TransactionReverted
         '''
         return self.send_transaction(
-            method=self.get_strategy_reserve(strategy_reserve).functions.mint(
+            method=self.strategy_reserve.functions.mint(
                 shares=shares,
-                receiver=on_behalf_of or self.default_address
+                receiver=on_behalf_of
             ),
             options=send_options,
         )
@@ -168,8 +170,7 @@ class Writer(ContractHandler, TransactionHandler):
     def withdraw(
         self,
         amount,
-        strategy_reserve,
-        on_behalf_of=None,
+        on_behalf_of,
         send_options=None
     ):
         '''
@@ -178,10 +179,7 @@ class Writer(ContractHandler, TransactionHandler):
         :param amount: required
         :type amount: integer
 
-        :param strategy_reserve: required
-        :type strategy_reserve: address
-
-        :param on_behalf_of: optional
+        :param on_behalf_of: required
         :type on_behalf_of: address
 
         :param send_options: optional
@@ -192,9 +190,9 @@ class Writer(ContractHandler, TransactionHandler):
         :raises: TransactionReverted
         '''
         return self.send_transaction(
-            method=self.get_strategy_reserve(strategy_reserve).functions.withdraw(
+            method=self.strategy_reserve.functions.withdraw(
                 assets=amount,
-                receiver=on_behalf_of or self.default_address,
+                receiver=on_behalf_of,
                 lender=self.default_address
             ),
             options=send_options,
@@ -203,8 +201,7 @@ class Writer(ContractHandler, TransactionHandler):
     def redeem(
         self,
         shares,
-        strategy_reserve,
-        on_behalf_of=None,
+        on_behalf_of,
         send_options=None
     ):
         '''
@@ -213,10 +210,7 @@ class Writer(ContractHandler, TransactionHandler):
         :param shares: required
         :type shares: integer
 
-        :param strategy_reserve: required
-        :type strategy_reserve: address
-
-        :param on_behalf_of: optional
+        :param on_behalf_of: required
         :type on_behalf_of: address
 
         :param send_options: optional
@@ -227,9 +221,9 @@ class Writer(ContractHandler, TransactionHandler):
         :raises: TransactionReverted
         '''
         return self.send_transaction(
-            method=self.get_strategy_reserve(strategy_reserve).functions.redeem(
+            method=self.strategy_reserve.functions.redeem(
                 shares=shares,
-                receiver=on_behalf_of or self.default_address,
+                receiver=on_behalf_of,
                 lender=self.default_address
             ),
             options=send_options,
@@ -241,17 +235,13 @@ class Writer(ContractHandler, TransactionHandler):
 
     def open_account(
         self,
-        strategy_bank,
-        on_behalf_of=None,
+        on_behalf_of,
         send_options=None
     ):
         '''
         Open a new strategy account.
 
-        :param strategy_bank: required
-        :type strategy_bank: address
-
-        :param on_behalf_of: optional
+        :param on_behalf_of: required
         :type on_behalf_of: address
 
         :param send_options: optional
@@ -262,23 +252,19 @@ class Writer(ContractHandler, TransactionHandler):
         :raises: TransactionReverted
         '''
         return self.send_transaction(
-            method=self.get_strategy_bank(strategy_bank).functions.executeOpenAccount(
-                onBehalfOf=on_behalf_of or self.default_address
+            method=self.strategy_bank.functions.executeOpenAccount(
+                onBehalfOf=on_behalf_of
             ),
             options=send_options,
         )
     
     def add_collateral(
         self,
-        strategy_account,
         amount,
         send_options=None
     ):
         '''
         Add collateral to a strategy account.
-
-        :param strategy_account: required
-        :type strategy_account: address
 
         :param amount: required
         :type amount: integer
@@ -291,7 +277,7 @@ class Writer(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         '''  
         return self.send_transaction(
-            method=self.get_strategy_account(strategy_account).functions.executeAddCollateral(
+            method=self.strategy_account.functions.executeAddCollateral(
                 collateral=amount
             ),
             options=send_options,
@@ -299,15 +285,11 @@ class Writer(ContractHandler, TransactionHandler):
     
     def borrow(
         self,
-        strategy_account,
         amount,
         send_options=None
     ):
         '''
         Borrow funds into a strategy account.
-
-        :param strategy_account: required
-        :type strategy_account: address
 
         :param amount: required
         :type amount: integer
@@ -320,7 +302,7 @@ class Writer(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         '''  
         return self.send_transaction(
-            method=self.get_strategy_account(strategy_account).functions.executeBorrow(
+            method=self.strategy_account.functions.executeBorrow(
                 loan=amount
             ),
             options=send_options,
@@ -328,15 +310,11 @@ class Writer(ContractHandler, TransactionHandler):
     
     def repay(
         self,
-        strategy_account,
         amount,
         send_options=None
     ):
         '''
         Repay funds from a strategy account.
-
-        :param strategy_account: required
-        :type strategy_account: address
 
         :param amount: required
         :type amount: integer
@@ -349,7 +327,7 @@ class Writer(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         '''  
         return self.send_transaction(
-            method=self.get_strategy_account(strategy_account).functions.executeRepayLoan(
+            method=self.strategy_account.functions.executeRepayLoan(
                 repayAmount=amount
             ),
             options=send_options,
@@ -357,26 +335,22 @@ class Writer(ContractHandler, TransactionHandler):
     
     def withdraw_collateral(
         self,
-        strategy_account,
         amount,
+        on_behalf_of,
         use_soft_withdrawal=False,
-        on_behalf_of=None,
         send_options=None
     ):
         '''
         Withdraw collateral that was put up for a strategy account.
 
-        :param strategy_account: required
-        :type strategy_account: address
-
         :param amount: required
         :type amount: integer
 
+        :param on_behalf_of: required
+        :type on_behalf_of: address
+
         :param use_soft_withdrawal: optional
         :type use_soft_withdrawal: boolean
-
-        :param on_behalf_of: optional
-        :type on_behalf_of: address
 
         :param send_options: optional
         :type send_options: sendOptions
@@ -386,8 +360,8 @@ class Writer(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         '''  
         return self.send_transaction(
-            method=self.get_strategy_account(strategy_account).functions.executeWithdrawCollateral(
-                onBehalfOf=on_behalf_of or self.default_address,
+            method=self.strategy_account.functions.executeWithdrawCollateral(
+                onBehalfOf=on_behalf_of,
                 collateral=amount,
                 useSoftWithdrawal=use_soft_withdrawal
             ),
@@ -396,21 +370,17 @@ class Writer(ContractHandler, TransactionHandler):
 
     def withdraw_native_asset(
         self,
-        strategy_account,
         amount,
-        on_behalf_of=None,
+        on_behalf_of,
         send_options=None
     ):
         '''
         Withdraw native asset from a strategy account.
 
-        :param strategy_account: required
-        :type strategy_account: address
-
         :param amount: required
         :type amount: integer
 
-        :param on_behalf_of: optional
+        :param on_behalf_of: required
         :type on_behalf_of: address
 
         :param send_options: optional
@@ -421,8 +391,8 @@ class Writer(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         '''  
         return self.send_transaction(
-            method=self.get_strategy_account(strategy_account).functions.executeWithdrawNativeAsset(
-                receiver=on_behalf_of or self.default_address,
+            method=self.strategy_account.functions.executeWithdrawNativeAsset(
+                receiver=on_behalf_of,
                 amount=amount
             ),
             options=send_options,
@@ -430,17 +400,13 @@ class Writer(ContractHandler, TransactionHandler):
     
     def withdraw_erc20_assets(
         self,
-        strategy_account,
         tokens,
         amounts,
-        on_behalf_of=None,
+        on_behalf_of,
         send_options=None
     ):
         '''
         Withdraw erc20 assets from a strategy account.
-
-        :param strategy_account: required
-        :type strategy_account: address
 
         :param tokens: required
         :type tokens: []address
@@ -448,7 +414,7 @@ class Writer(ContractHandler, TransactionHandler):
         :param amounts: required
         :type amounts: []integer
 
-        :param on_behalf_of: optional
+        :param on_behalf_of: required
         :type on_behalf_of: address
 
         :param send_options: optional
@@ -459,8 +425,8 @@ class Writer(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         '''  
         return self.send_transaction(
-            method=self.get_strategy_account(strategy_account).functions.executeWithdrawErc20Assets(
-                on_behalf_of or self.default_address,
+            method=self.strategy_accountfunctions.executeWithdrawErc20Assets(
+                on_behalf_of,
                 tokens,
                 amounts
             ),
@@ -516,3 +482,19 @@ class Writer(ContractHandler, TransactionHandler):
             method=self.get_strategy_account(strategy_account).functions.executeProcessLiquidation(),
             options=send_options,
         )
+
+    # -----------------------------------------------------------
+    # Utilities
+    # -----------------------------------------------------------
+
+    def set_strategy_account(
+            self,
+            strategy_account
+    ):
+        '''
+        Set strategy account for writer.
+
+        :param strategy_account: required
+        :type strategy_account: address
+        '''
+        self.strategy_account = self.get_strategy_account(strategy_account)

@@ -31,6 +31,8 @@ client = Client(
     default_address=PUBLIC_KEY,
 )
 
+client.strategy_account = STRATEGY_ACCOUNT
+
 options = {
     'gasPrice': 25000000000
 }
@@ -40,7 +42,6 @@ USDC = constants.CONTRACTS[constants.ASSET_USDC][constants.NETWORK_ID_FUJI]
 # Increase position.
 print("Claiming fees for one or more GMX Market position")
 claim_fees_transaction = client.gmx_frf_writer.claim_funding_fees(
-    strategy_account=STRATEGY_ACCOUNT,
     markets=[GMX_MARKET],
     assets=[USDC],
     send_options=options

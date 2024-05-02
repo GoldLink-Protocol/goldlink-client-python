@@ -29,6 +29,7 @@ client = Client(
     web3=Web3(Web3.HTTPProvider(constants.WEB_PROVIDER_URL_FUJI)),
     private_key=PRIVATE_KEY,
     default_address=PUBLIC_KEY,
+    strategy_account=STRATEGY_ACCOUNT,
 )
 
 options = {
@@ -41,7 +42,6 @@ print(client.reader.get_account_value(strategy_account=STRATEGY_ACCOUNT))
 # Decrease position.
 print("Decreasing GMX Market position")
 decrease_position_transaction = client.gmx_frf_writer.create_decrease_order(
-    strategy_account=STRATEGY_ACCOUNT,
     market=GMX_MARKET,
     size_delta_usd=60000000,
     execution_fee=2500000000000000000,

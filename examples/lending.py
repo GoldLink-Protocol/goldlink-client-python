@@ -25,15 +25,14 @@ client = Client(
     network_id=constants.NETWORK_ID_FUJI,
     web3=Web3(Web3.HTTPProvider(constants.WEB_PROVIDER_URL_FUJI)),
     private_key=PRIVATE_KEY,
-    default_address=PUBLIC_KEY,
+    strategy_reserve=constants.CONTRACTS[constants.RESERVE][constants.NETWORK_ID_FUJI]
 )
 
 # Get relevant contract addresses.
-strategy_reserve = constants.CONTRACTS[constants.RESERVE][constants.NETWORK_ID_FUJI]
-erc20 = client.reader.get_strategy_asset(strategy_reserve=strategy_reserve)
+erc20 = client.reader.get_strategy_asset()
 
 # Get some relevant "before" data points.
-before_reserve_balance = client.reader.get_balance_of(erc20, strategy_reserve)
+before_reserve_balance = client.reader.get_balance_of(erc20, client.strategy_reserve)
 print("BEFORE: ", client.reader.get_balance_of(erc20, PUBLIC_KEY))
 
 options = {
@@ -42,8 +41,8 @@ options = {
 
 # Set approval for a strategy reserve to pull funds from this wallet.
 print("Awaiting lending approval")
-approve_transaction = client.writer.approve_address(
-    address=strategy_reserve, 
+approve_transaction = client.writer.approve(
+    address=client.strategy_reserve, 
     amount=LEND_AMOUNT * 10, 
     erc20=erc20,
     send_options=options
@@ -54,13 +53,13 @@ print("Lending approved")
 # Lend to a strategy reserve.
 print("Begin a deposit")
 deposit_transaction = client.writer.deposit(
-    LEND_AMOUNT,
-    strategy_reserve,
+    amount=LEND_AMOUNT,
+    on_behalf_of=PUBLIC_KEY,
     send_options=options
 )
 receipt = client.writer.wait_for_transaction(deposit_transaction)
 depositEvent = client.event_handler.handle_deposit_event(
-    strategy_reserve,
+    client.strategy_reserve,
     receipt
 )
 print("Deposit Event: ", depositEvent)
@@ -69,12 +68,12 @@ print("Deposit Event: ", depositEvent)
 print("Begin a mint")
 mint_transaction = client.writer.mint(
     shares=LEND_AMOUNT,
-    strategy_reserve=strategy_reserve,
+    on_behalf_of=PUBLIC_KEY,
     send_options=options
 )
 receipt = client.writer.wait_for_transaction(mint_transaction)
 depositEvent = client.event_handler.handle_deposit_event(
-    strategy_reserve,
+    client.strategy_reserve,
     receipt
 )
 print("Mint Event: ", depositEvent)
@@ -83,12 +82,12 @@ print("Mint Event: ", depositEvent)
 print("Begin a withdraw")
 withdraw_transaction = client.writer.withdraw(
     amount=20000000,
-    strategy_reserve=strategy_reserve,
+    on_behalf_of=PUBLIC_KEY,
     send_options=options
 )
 receipt = client.writer.wait_for_transaction(withdraw_transaction)
 depositEvent = client.event_handler.handle_withdraw_event(
-    strategy_reserve,
+    client.strategy_reserve,
     receipt
 )
 print("Withdraw Event: ", depositEvent)
@@ -97,18 +96,18 @@ print("Withdraw Event: ", depositEvent)
 print("Begin a redemption")
 redeem_transaction = client.writer.redeem(
     shares=20000000,
-    strategy_reserve=strategy_reserve,
+    on_behalf_of=PUBLIC_KEY,
     send_options=options
 )
 receipt = client.writer.wait_for_transaction(redeem_transaction)
 depositEvent = client.event_handler.handle_withdraw_event(
-    strategy_reserve,
+    client.strategy_reserve,
     receipt
 )
 print("Redeem Event: ", depositEvent)
 
 # Verify lending succeeded.
-after_reserve_balance = client.reader.get_balance_of(erc20, strategy_reserve)
+after_reserve_balance = client.reader.get_balance_of(erc20, client.strategy_reserve)
 
 # Print effects of lending.
 print("Strategy Reserve balance: ", after_reserve_balance)

@@ -14,12 +14,16 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         web3,
         private_key,
         default_address,
-        send_options
+        send_options,
+        strategy_account=None,
     ):
         ContractHandler.__init__(self, web3)
         TransactionHandler.__init__(self, web3, private_key, default_address, send_options)
 
-        self.default_address = default_address
+        self.strategy_account = None
+
+        if strategy_account:
+            self.set_strategy_account(strategy_account)
 
     # -----------------------------------------------------------
     # Core Transactions
@@ -27,7 +31,6 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
 
     def create_increase_order(
             self,
-            strategy_account,
             market,
             amount,
             execution_fee,
@@ -35,9 +38,6 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
     ):
         '''
         Create an increase order for a position.
-
-        :param strategy_account: required
-        :type strategy_account: address
 
         :param market: required
         :type market: address
@@ -56,7 +56,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         ''' 
         return self.send_transaction(
-            method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeCreateIncreaseOrder(
+            method=self.strategy_account.functions.executeCreateIncreaseOrder(
                 market=market,
                 collateralAmount=amount,
                 executionFee=execution_fee
@@ -66,7 +66,6 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
     
     def create_decrease_order(
             self,
-            strategy_account,
             market,
             size_delta_usd,
             execution_fee,
@@ -74,9 +73,6 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
     ):
         '''
         Create a decrease order for a position.
-
-        :param strategy_account: required
-        :type strategy_account: address
 
         :param market: required
         :type market: address
@@ -95,7 +91,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         ''' 
         return self.send_transaction(
-            method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeCreateDecreaseOrder(
+            method=self.strategy_account.functions.executeCreateDecreaseOrder(
                 market=market,
                 sizeDeltaUsd=size_delta_usd,
                 executionFee=execution_fee
@@ -105,7 +101,6 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
 
     def claim_collateral(
             self,
-            strategy_account,
             market,
             asset,
             time_key,
@@ -113,9 +108,6 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
     ):
         '''
         Claim collateral for a market.
-
-        :param strategy_account: required
-        :type strategy_account: address
 
         :param market: required
         :type market: address
@@ -134,7 +126,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         ''' 
         return self.send_transaction(
-            method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeClaimCollateral(
+            method=self.strategy_account.functions.executeClaimCollateral(
                 market=market,
                 asset=asset,
                 timeKey=time_key
@@ -144,16 +136,12 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
     
     def claim_funding_fees(
             self,
-            strategy_account,
             markets,
             assets,
             send_options=None
     ):
         '''
         Claim funding fees across markets.
-
-        :param strategy_account: required
-        :type strategy_account: address
 
         :param markets: required
         :type markets: []address
@@ -169,7 +157,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         ''' 
         return self.send_transaction(
-            method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeClaimFundingFees(
+            method=self.strategy_account.functions.executeClaimFundingFees(
                 markets,
                 assets
             ),
@@ -178,15 +166,11 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
     
     def cancel_order(
             self,
-            strategy_account,
             order_key,
             send_options=None
     ):
         '''
         Cancel an order.
-
-        :param strategy_account: required
-        :type strategy_account: address
 
         :param order_key: required
         :type order_key: bytes
@@ -199,7 +183,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         ''' 
         return self.send_transaction(
-            method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeCancelOrder(
+            method=self.strategy_account.functions.executeCancelOrder(
                 orderKey=order_key
             ),
             options=send_options,
@@ -207,7 +191,6 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
     
     def swap_assets(
             self,
-            strategy_account,
             market,
             long_token_amount_out,
             callback,
@@ -216,9 +199,6 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
     ):
         '''
         Swap assets for the strategy account.
-
-        :param strategy_account: required
-        :type strategy_account: address
 
         :param market: required
         :type market: address
@@ -240,7 +220,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         '''  
         return self.send_transaction(
-            method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeSwapAssets(
+            method=self.strategy_account.functions.executeSwapAssets(
                 market=market,
                 longTokenAmountOut=long_token_amount_out,
                 callback=callback,
@@ -251,15 +231,11 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
     
     def withdraw_profit(
             self,
-            strategy_account,
             params,
             send_options=None
     ):
         '''
         Withdraw profit from a strategy account.
-
-        :param strategy_account: required
-        :type strategy_account: address
 
         :param params: required
         :type params: Object
@@ -272,7 +248,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         '''  
         return self.send_transaction(
-            method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeWithdrawProfit(
+            method=self.strategy_account.functions.executeWithdrawProfit(
                 params=params
             ),
             options=send_options,
@@ -478,15 +454,11 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
 
     def multi_call(
             self,
-            strategy_account,
             data,
             send_options=None
     ):
         '''
         Make a multi-call for the strategy account.
-
-        :param strategy_account: required
-        :type strategy_account: address
 
         :param data: required
         :type data: []bytes
@@ -499,8 +471,24 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :raise: TransactionReverted
         ''' 
         return self.send_transaction(
-            method=self.get_gmxfrf_strategy_account(strategy_account).functions.multicall(
+            method=self.strategy_account.functions.multicall(
                 data=data
             ),
             options=send_options,
         )
+
+    # -----------------------------------------------------------
+    # Utilities
+    # -----------------------------------------------------------
+
+    def set_strategy_account(
+            self,
+            strategy_account
+    ):
+        '''
+        Set strategy account for GMX FRF writer.
+
+        :param strategy_account: required
+        :type strategy_account: address
+        '''
+        self.strategy_account = self.get_gmxfrf_strategy_account(strategy_account)

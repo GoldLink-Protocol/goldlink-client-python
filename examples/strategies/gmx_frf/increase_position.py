@@ -29,6 +29,7 @@ client = Client(
     web3=Web3(Web3.HTTPProvider(constants.WEB_PROVIDER_URL_FUJI)),
     private_key=PRIVATE_KEY,
     default_address=PUBLIC_KEY,
+    strategy_account=STRATEGY_ACCOUNT,
 )
 
 options = {
@@ -39,7 +40,6 @@ options = {
 # Increase position.
 print("Increasing GMX Market position")
 increase_position_transaction = client.gmx_frf_writer.create_increase_order(
-    strategy_account=STRATEGY_ACCOUNT,
     market=GMX_MARKET,
     amount=60000000,
     execution_fee=2500000000000000000,
