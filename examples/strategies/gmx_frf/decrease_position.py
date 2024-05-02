@@ -1,6 +1,6 @@
 '''
 Example for decreasing a position. Additionally, only works if
-a GMX position had been created. Use `python -m examples.strategies.gmx_frf.increase_position` to create a 
+a GMX position had been created. Use `python -m examples.strategies.gmx_frf.increase_position` to create a
 GMX position on Fuji.
 
 Usage: python -m examples.strategies.gmx_frf.decrease_position
@@ -21,7 +21,7 @@ PRIVATE_KEY = os.getenv('TEST_OWNER_PRIVATE_KEY')
 STRATEGY_ACCOUNT = os.getenv('GMX_FRF_ACCOUNT')
 
 # Market
-GMX_MARKET="0xD996ff47A1F763E1e55415BC4437c59292D1F415"
+GMX_MARKET = "0xD996ff47A1F763E1e55415BC4437c59292D1F415"
 
 # Initialize client.
 client = Client(

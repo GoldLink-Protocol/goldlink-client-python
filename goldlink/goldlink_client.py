@@ -11,6 +11,7 @@ from goldlink.modules.strategies.gmx_frf.gmx_frf_reader import GmxFrfReader
 from goldlink.constants import NETWORK_ID_MAINNET, DEFAULT_API_TIMEOUT
 from goldlink.signing.signer import SignWithWeb3, SignWithKey
 
+
 class Client(object):
     '''
     Client users of the GoldLink-Client-Python will be interacting with the
@@ -32,9 +33,9 @@ class Client(object):
         strategy_account=None,
     ):
         # Set Contracts if input.
-        self.strategy_reserve=strategy_reserve
-        self.strategy_bank=strategy_bank
-        self.strategy_account=strategy_account
+        self.strategy_reserve = strategy_reserve
+        self.strategy_bank = strategy_bank
+        self.strategy_account = strategy_account
 
         # Set API parameters if input.
         self.send_options = send_options or {}
@@ -78,14 +79,14 @@ class Client(object):
         # Initialize the reader and event handler modules. Other modules are initialized on
         # demand, if the necessary configuration options were provided.
         self._reader = Reader(
-            web3=self.web3, 
-            network_id=self.network_id, 
+            web3=self.web3,
+            network_id=self.network_id,
             strategy_bank=self.strategy_bank,
             strategy_reserve=self.strategy_reserve,
         )
         self._gmx_frf_reader = GmxFrfReader(
-            web3=self.web3, 
-            network_id=self.network_id, 
+            web3=self.web3,
+            network_id=self.network_id,
         )
         self._event_handler = EventHandler(web3=self.web3)
         self._gmx_frf_event_handler = GmxFrfEventHandler(web3=self.web3)
@@ -98,23 +99,22 @@ class Client(object):
         Get the reader module, used for reading from protocol.
         '''
         return self._reader
-    
+
     @property
     def gmx_frf_reader(self):
         '''
-        Get th GMX Funding-rate Farming reader module, used for reading from protocol for 
+        Get th GMX Funding-rate Farming reader module, used for reading from protocol for
         GMX Funding-rate Farming Strategy.
         '''
         return self._gmx_frf_reader
-    
-    
+
     @property
     def event_handler(self):
         '''
         Get the event handler module, used for handling events emitted from the protocol.
         '''
         return self._event_handler
-    
+
     @property
     def gmx_frf_event_handler(self):
         '''
@@ -146,17 +146,16 @@ class Client(object):
                     'nor web3_provider was provided OR since neither ' +
                     'private_key nor web3_account was provided',
                 )
-        
+
         if self.strategy_account and not self._writer.strategy_account:
             self._writer.set_strategy_account(self.strategy_account)
 
         return self._writer
-    
 
     @property
     def gmx_frf_writer(self):
         '''
-        Get the GMX Funding-Rate Farming Writer module, used for sending strategy specific 
+        Get the GMX Funding-Rate Farming Writer module, used for sending strategy specific
         transactions to the protocol for GMX Funding-rate Farming Strategy.
         '''
         if not self._gmx_frf_writer:
@@ -175,9 +174,8 @@ class Client(object):
                     'nor web3_provider was provided OR since neither ' +
                     'private_key nor web3_account was provided',
                 )
-        
+
         if self.strategy_account and not self._gmx_frf_writer.strategy_account:
             self._gmx_frf_writer.set_strategy_account(self.strategy_account)
 
         return self._gmx_frf_writer
-    

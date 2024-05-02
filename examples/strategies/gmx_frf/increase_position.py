@@ -1,6 +1,6 @@
 '''
 Example for increasing a position. Additionally, only works if
-a lending position had been created. Use `python -m examples.lending` to create a 
+a lending position had been created. Use `python -m examples.lending` to create a
 lending position on Fuji.
 
 Usage: python -m examples.strategies.gmx_frf.increase_position
@@ -21,7 +21,7 @@ PRIVATE_KEY = os.getenv('TEST_OWNER_PRIVATE_KEY')
 STRATEGY_ACCOUNT = os.getenv('GMX_FRF_ACCOUNT')
 
 # Market
-GMX_MARKET="0xD996ff47A1F763E1e55415BC4437c59292D1F415"
+GMX_MARKET = "0xD996ff47A1F763E1e55415BC4437c59292D1F415"
 
 # Initialize client.
 client = Client(
@@ -46,5 +46,3 @@ increase_position_transaction = client.gmx_frf_writer.create_increase_order(
 )
 receipt = client.gmx_frf_writer.wait_for_transaction(increase_position_transaction)
 print("Create increase order event: ", client.gmx_frf_event_handler.handle_create_increase_order_event(STRATEGY_ACCOUNT, receipt))
-
-

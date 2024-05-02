@@ -3,6 +3,7 @@
 from goldlink.modules.contract_handler import ContractHandler
 from goldlink.helpers import handle_event
 
+
 class EventHandler(ContractHandler):
 
     '''
@@ -34,7 +35,7 @@ class EventHandler(ContractHandler):
         strategy_reserve_abi = self.get_strategy_reserve(strategy_reserve)
 
         return handle_event(strategy_reserve_abi.events.Deposit().processReceipt(transaction_receipt))
-    
+
     def handle_withdraw_event(self, strategy_reserve, transaction_receipt):
         '''
         Handle and return event emitted when withdrawing from a strategy reserve.
@@ -50,7 +51,7 @@ class EventHandler(ContractHandler):
         strategy_reserve_abi = self.get_strategy_reserve(strategy_reserve)
 
         return handle_event(strategy_reserve_abi.events.Withdraw().processReceipt(transaction_receipt))
-    
+
     # -----------------------------------------------------------
     # Borrowing Events
     # -----------------------------------------------------------
@@ -70,7 +71,7 @@ class EventHandler(ContractHandler):
         strategy_bank_abi = self.get_strategy_bank(strategy_bank)
 
         return handle_event(strategy_bank_abi.events.OpenAccount().processReceipt(transaction_receipt))
-    
+
     def handle_add_collateral_event(self, strategy_bank, transaction_receipt):
         '''
         Handle and return event emitted when adding collateral to a strategy account.
@@ -102,7 +103,7 @@ class EventHandler(ContractHandler):
         strategy_bank_abi = self.get_strategy_bank(strategy_bank)
 
         return handle_event(strategy_bank_abi.events.BorrowFunds().processReceipt(transaction_receipt))
-    
+
     def handle_repay_event(self, strategy_bank, transaction_receipt):
         '''
         Handle and return event emitted when repaying from a strategy account.

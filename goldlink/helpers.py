@@ -3,6 +3,7 @@
 from web3 import Web3
 import requests
 
+
 def handle_event(event):
     '''
     Handle parsing a generic event.
@@ -13,6 +14,7 @@ def handle_event(event):
     :returns: AttributeDict
     '''
     return event[0]['args']
+
 
 def send_raw_query(
         node_url,
@@ -51,8 +53,9 @@ def send_raw_query(
             {
                 "to": contract_address,
                 "data": function_call_data
-            }, 
-        "latest"],
+            },
+            "latest",
+        ],
         "id": 1
     }
 
@@ -61,6 +64,6 @@ def send_raw_query(
 
     # Parse the response
     result_hex = response.json()["result"]
-    result_decoded = int(result_hex, 16) 
-    
+    result_decoded = int(result_hex, 16)
+
     return result_decoded

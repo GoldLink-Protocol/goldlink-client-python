@@ -5,6 +5,7 @@ import os
 
 import goldlink.constants as Constants
 
+
 class ContractHandler(object):
     '''
     Generic contract handling contract used by Reader and Writer modules.
@@ -24,7 +25,7 @@ class ContractHandler(object):
     # -----------------------------------------------------------
     # ABI Getter Functions
     # -----------------------------------------------------------
-        
+
     def get_erc20(self, erc20):
         '''
         Get ABI of the ERC20.
@@ -33,7 +34,7 @@ class ContractHandler(object):
         :type erc20: address
 
         :returns: Object
-        '''  
+        '''
         return self.get_contract(erc20, Constants.ERC20)
 
     def get_strategy_reserve(self, strategy_reserve):
@@ -46,7 +47,7 @@ class ContractHandler(object):
         :returns: Object
         '''
         return self.get_contract(strategy_reserve, Constants.STRATEGY_RESERVE_ABI)
-    
+
     def get_strategy_bank(self, strategy_bank):
         '''
         Get ABI of the StrategyBank.
@@ -68,7 +69,7 @@ class ContractHandler(object):
         :returns: Object
         '''
         return self.get_contract(strategy_account, Constants.STRATEGY_ACCOUNT_ABI)
-    
+
     def get_gmxfrf_strategy_account(self, strategy_account):
         '''
         Get ABI of the GmxFrfStrategyAccount.
@@ -80,12 +81,12 @@ class ContractHandler(object):
         '''
         if strategy_account not in self.cached_gmx_frf_accounts and strategy_account in self.cached_contracts:
             del self.cached_contracts[strategy_account]
-        
+
         strategy_obj = self.get_contract(strategy_account, Constants.GMX_FRF_STRATEGY_ACCOUNT_ABI)
         self.cached_gmx_frf_accounts[strategy_account] = strategy_obj
 
         return strategy_obj
-    
+
     def get_gmxfrf_strategy_manager(self, strategy_manager):
         '''
         Get ABI of the GmxFrfStrategyManager.
@@ -107,7 +108,7 @@ class ContractHandler(object):
         :returns: Object
         '''
         return self.get_contract(account_getters, Constants.GMX_FRF_ACCOUNT_GETTERS_ABI)
-    
+
     # -----------------------------------------------------------
     # Utility Functions
     # -----------------------------------------------------------
@@ -146,7 +147,7 @@ class ContractHandler(object):
         file_path,
     ):
         '''
-        Fetches or creates a contract object to allow reading from or writing 
+        Fetches or creates a contract object to allow reading from or writing
         to a contract at a specific address.
 
         :param address: required
@@ -165,4 +166,3 @@ class ContractHandler(object):
                 file_path,
             )
         return self.cached_contracts[address]
-    

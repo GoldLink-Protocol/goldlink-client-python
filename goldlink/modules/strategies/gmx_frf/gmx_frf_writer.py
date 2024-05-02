@@ -3,6 +3,7 @@
 from goldlink.modules.contract_handler import ContractHandler
 from goldlink.modules.transaction_handler import TransactionHandler
 
+
 class GmxFrfWriter(ContractHandler, TransactionHandler):
 
     '''
@@ -18,7 +19,13 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         strategy_account=None,
     ):
         ContractHandler.__init__(self, web3)
-        TransactionHandler.__init__(self, web3, private_key, default_address, send_options)
+        TransactionHandler.__init__(
+            self,
+            web3,
+            private_key,
+            default_address,
+            send_options,
+        )
 
         self.strategy_account = None
 
@@ -54,7 +61,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :returns: transactionHash
 
         :raise: TransactionReverted
-        ''' 
+        '''
         return self.send_transaction(
             method=self.strategy_account.functions.executeCreateIncreaseOrder(
                 market=market,
@@ -63,7 +70,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     def create_decrease_order(
             self,
             market,
@@ -89,7 +96,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :returns: transactionHash
 
         :raise: TransactionReverted
-        ''' 
+        '''
         return self.send_transaction(
             method=self.strategy_account.functions.executeCreateDecreaseOrder(
                 market=market,
@@ -124,7 +131,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :returns: None
 
         :raise: TransactionReverted
-        ''' 
+        '''
         return self.send_transaction(
             method=self.strategy_account.functions.executeClaimCollateral(
                 market=market,
@@ -133,7 +140,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     def claim_funding_fees(
             self,
             markets,
@@ -148,14 +155,14 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
 
         :param assets: required
         :type assets: []address
-        
+
         :param send_options: optional
         :type send_options: sendOptions
 
         :returns: None
 
         :raise: TransactionReverted
-        ''' 
+        '''
         return self.send_transaction(
             method=self.strategy_account.functions.executeClaimFundingFees(
                 markets,
@@ -163,7 +170,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     def cancel_order(
             self,
             order_key,
@@ -181,14 +188,14 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :returns: None
 
         :raise: TransactionReverted
-        ''' 
+        '''
         return self.send_transaction(
             method=self.strategy_account.functions.executeCancelOrder(
                 orderKey=order_key
             ),
             options=send_options,
         )
-    
+
     def swap_assets(
             self,
             market,
@@ -218,7 +225,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :returns: None
 
         :raise: TransactionReverted
-        '''  
+        '''
         return self.send_transaction(
             method=self.strategy_account.functions.executeSwapAssets(
                 market=market,
@@ -228,7 +235,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     def withdraw_profit(
             self,
             params,
@@ -246,14 +253,14 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :returns: None
 
         :raise: TransactionReverted
-        '''  
+        '''
         return self.send_transaction(
             method=self.strategy_account.functions.executeWithdrawProfit(
                 params=params
             ),
             options=send_options,
         )
-    
+
     # -----------------------------------------------------------
     # Liquidation Transactions
     # -----------------------------------------------------------
@@ -291,7 +298,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :returns: None
 
         :raise: TransactionReverted
-        ''' 
+        '''
         return self.send_transaction(
             method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeLiquidateAssets(
                 asset=asset,
@@ -331,7 +338,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :returns: None
 
         :raise: TransactionReverted
-        ''' 
+        '''
         return self.send_transaction(
             method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeLiquidatePosition(
                 market=market,
@@ -340,7 +347,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     def rebalance_position(
             self,
             strategy_account,
@@ -356,7 +363,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
 
         :param market: required
         :type market: address
-        
+
         :param execution_fee: required
         :type execution_fee: integer
 
@@ -366,7 +373,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :returns: None
 
         :raise: TransactionReverted
-        ''' 
+        '''
         return self.send_transaction(
             method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeRebalancePosition(
                 market=market,
@@ -374,7 +381,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     def releverage_position(
             self,
             strategy_account,
@@ -404,7 +411,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :returns: None
 
         :raise: TransactionReverted
-        ''' 
+        '''
         return self.send_transaction(
             method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeReleveragePosition(
                 market=market,
@@ -413,7 +420,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-        
+
     def swap_rebalance(
             self,
             strategy_account,
@@ -439,7 +446,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :returns: None
 
         :raise: TransactionReverted
-        ''' 
+        '''
         return self.send_transaction(
             method=self.get_gmxfrf_strategy_account(strategy_account).functions.executeSwapRebalance(
                 market=market,
@@ -447,7 +454,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     # -----------------------------------------------------------
     # Misc Transactions
     # -----------------------------------------------------------
@@ -469,7 +476,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :returns: None
 
         :raise: TransactionReverted
-        ''' 
+        '''
         return self.send_transaction(
             method=self.strategy_account.functions.multicall(
                 data=data
@@ -491,4 +498,6 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         :param strategy_account: required
         :type strategy_account: address
         '''
-        self.strategy_account = self.get_gmxfrf_strategy_account(strategy_account)
+        self.strategy_account = self.get_gmxfrf_strategy_account(
+            strategy_account,
+        )

@@ -3,6 +3,7 @@
 from goldlink.modules.contract_handler import ContractHandler
 from goldlink.modules.transaction_handler import TransactionHandler
 
+
 class Writer(ContractHandler, TransactionHandler):
 
     '''
@@ -20,7 +21,13 @@ class Writer(ContractHandler, TransactionHandler):
         strategy_account=None,
     ):
         ContractHandler.__init__(self, web3)
-        TransactionHandler.__init__(self, web3, private_key, default_address, send_options)
+        TransactionHandler.__init__(
+            self,
+            web3,
+            private_key,
+            default_address,
+            send_options,
+        )
 
         self.strategy_account = None
 
@@ -68,7 +75,7 @@ class Writer(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     def transfer(
         self,
         to,
@@ -114,7 +121,8 @@ class Writer(ContractHandler, TransactionHandler):
         send_options=None
     ):
         '''
-        Deposit assets into the strategy reserve and receive tokenized vault shares back.
+        Deposit assets into the strategy reserve and receive
+        tokenized vault shares back.
 
         :param amount: required
         :type amount: integer
@@ -136,7 +144,7 @@ class Writer(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     def mint(
         self,
         shares,
@@ -174,7 +182,8 @@ class Writer(ContractHandler, TransactionHandler):
         send_options=None
     ):
         '''
-        Withdraw assets from the strategy reserve and burn tokenized vault shares.
+        Withdraw assets from the strategy reserve and burn
+        tokenized vault shares.
 
         :param amount: required
         :type amount: integer
@@ -197,7 +206,7 @@ class Writer(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     def redeem(
         self,
         shares,
@@ -205,7 +214,8 @@ class Writer(ContractHandler, TransactionHandler):
         send_options=None
     ):
         '''
-        Redeem shares from the strategy reserve, withdrawing share value and burning tokenized vault shares.
+        Redeem shares from the strategy reserve, withdrawing
+        share value and burning tokenized vault shares.
 
         :param shares: required
         :type shares: integer
@@ -228,7 +238,7 @@ class Writer(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     # -----------------------------------------------------------
     # Borrowing Transactions
     # -----------------------------------------------------------
@@ -257,7 +267,7 @@ class Writer(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     def add_collateral(
         self,
         amount,
@@ -275,14 +285,14 @@ class Writer(ContractHandler, TransactionHandler):
         :returns: transactionHash
 
         :raise: TransactionReverted
-        '''  
+        '''
         return self.send_transaction(
             method=self.strategy_account.functions.executeAddCollateral(
                 collateral=amount
             ),
             options=send_options,
         )
-    
+
     def borrow(
         self,
         amount,
@@ -300,14 +310,14 @@ class Writer(ContractHandler, TransactionHandler):
         :returns: transactionHash
 
         :raise: TransactionReverted
-        '''  
+        '''
         return self.send_transaction(
             method=self.strategy_account.functions.executeBorrow(
                 loan=amount
             ),
             options=send_options,
         )
-    
+
     def repay(
         self,
         amount,
@@ -325,14 +335,14 @@ class Writer(ContractHandler, TransactionHandler):
         :returns: transactionHash
 
         :raise: TransactionReverted
-        '''  
+        '''
         return self.send_transaction(
             method=self.strategy_account.functions.executeRepayLoan(
                 repayAmount=amount
             ),
             options=send_options,
         )
-    
+
     def withdraw_collateral(
         self,
         amount,
@@ -358,7 +368,7 @@ class Writer(ContractHandler, TransactionHandler):
         :returns: transactionHash
 
         :raise: TransactionReverted
-        '''  
+        '''
         return self.send_transaction(
             method=self.strategy_account.functions.executeWithdrawCollateral(
                 onBehalfOf=on_behalf_of,
@@ -389,7 +399,7 @@ class Writer(ContractHandler, TransactionHandler):
         :returns: transactionHash
 
         :raise: TransactionReverted
-        '''  
+        '''
         return self.send_transaction(
             method=self.strategy_account.functions.executeWithdrawNativeAsset(
                 receiver=on_behalf_of,
@@ -397,7 +407,7 @@ class Writer(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     def withdraw_erc20_assets(
         self,
         tokens,
@@ -423,7 +433,7 @@ class Writer(ContractHandler, TransactionHandler):
         :returns: transactionHash
 
         :raise: TransactionReverted
-        '''  
+        '''
         return self.send_transaction(
             method=self.strategy_accountfunctions.executeWithdrawErc20Assets(
                 on_behalf_of,
@@ -432,7 +442,7 @@ class Writer(ContractHandler, TransactionHandler):
             ),
             options=send_options,
         )
-    
+
     # -----------------------------------------------------------
     # Liquidation Transactions
     # -----------------------------------------------------------
@@ -454,12 +464,14 @@ class Writer(ContractHandler, TransactionHandler):
         :returns: transactionHash
 
         :raise: TransactionReverted
-        ''' 
+        '''
         return self.send_transaction(
-            method=self.get_strategy_account(strategy_account).functions.executeInitiateLiquidation(),
+            method=self.get_strategy_account(
+                strategy_account,
+            ).functions.executeInitiateLiquidation(),
             options=send_options,
         )
-    
+
     def process_liquidation(
         self,
         strategy_account,
@@ -477,9 +489,11 @@ class Writer(ContractHandler, TransactionHandler):
         :returns: transactionHash
 
         :raise: TransactionReverted
-        ''' 
+        '''
         return self.send_transaction(
-            method=self.get_strategy_account(strategy_account).functions.executeProcessLiquidation(),
+            method=self.get_strategy_account(
+                strategy_account,
+            ).functions.executeProcessLiquidation(),
             options=send_options,
         )
 

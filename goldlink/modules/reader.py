@@ -2,6 +2,7 @@
 
 from goldlink.modules.contract_handler import ContractHandler
 
+
 class Reader(ContractHandler):
     '''
     Module for reading from the GoldLink Protocol.
@@ -29,7 +30,7 @@ class Reader(ContractHandler):
     # -----------------------------------------------------------
     # Address Querying Functions
     # -----------------------------------------------------------
-        
+
     def get_strategy_asset(self):
         '''
         Get the asset for a strategy.
@@ -37,9 +38,9 @@ class Reader(ContractHandler):
         :returns: address
         '''
         if self.strategy_reserve:
-            return  self.strategy_reserve.functions.STRATEGY_ASSET().call()
+            return self.strategy_reserve.functions.STRATEGY_ASSET().call()
         if self.strategy_bank:
-            return  self.strategy_bank.functions.STRATEGY_ASSET().call()
+            return self.strategy_bank.functions.STRATEGY_ASSET().call()
 
     def get_strategy_bank_for_reserve(self):
         '''
@@ -48,14 +49,14 @@ class Reader(ContractHandler):
         :returns: address
         '''
         return self.strategy_reserve.functions.STRATEGY_BANK().call()
-    
+
     def get_strategy_reserve_for_bank(self):
         '''
         Get address of the StrategyReserve for a bank.
 
         :returns: address
         '''
-        return  self.strategy_bank.functions.STRATEGY_RESERVE().call()
+        return self.strategy_bank.functions.STRATEGY_RESERVE().call()
 
     # -----------------------------------------------------------
     # ERC20 Querying Functions
@@ -74,21 +75,25 @@ class Reader(ContractHandler):
         :returns: integer
         '''
         return self.get_erc20(erc20).functions.balanceOf(address).call()
-    
+
     # -----------------------------------------------------------
     # Borrowing Functions
     # -----------------------------------------------------------
 
     def get_strategy_accounts_for_bank(self, owner=None):
         '''
-        Get address of every strategy account for a bank or just owned by `owner`.
+        Get address of every strategy account for a bank or
+        just owned by `owner`.
 
         :param owner: optional
         :type owner: address
 
         :returns: []address
         '''
-        strategy_account_addresses = self.strategy_bank.functions.getStrategyAccounts(0,0).call()
+        strategy_account_addresses = self.strategy_bank.functions.getStrategyAccounts(
+            0,
+            0,
+        ).call()
 
         if owner:
             strategy_account_addresses = [s for s in strategy_account_addresses if self.get_strategy_account(s).functions.getOwner().call() == owner]
@@ -104,7 +109,9 @@ class Reader(ContractHandler):
 
         :returns: AttributeDict
         '''
-        holdings = self.strategy_bank.functions.getStrategyAccountHoldings(strategy_account).call()
+        holdings = self.strategy_bank.functions.getStrategyAccountHoldings(
+            strategy_account,
+        ).call()
         return {
             'collateral': holdings[0],
             'loan': holdings[1],

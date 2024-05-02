@@ -42,8 +42,8 @@ options = {
 # Set approval for a strategy reserve to pull funds from this wallet.
 print("Awaiting lending approval")
 approve_transaction = client.writer.approve(
-    address=client.strategy_reserve, 
-    amount=LEND_AMOUNT * 10, 
+    address=client.strategy_reserve,
+    amount=LEND_AMOUNT * 10,
     erc20=erc20,
     send_options=options
 )

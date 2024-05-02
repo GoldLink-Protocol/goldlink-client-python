@@ -2,6 +2,7 @@ from goldlink import constants
 
 # ============ Signature Helpers ============
 
+
 def is_valid_sig_type(
     sig_type,
 ):
@@ -18,6 +19,7 @@ def is_valid_sig_type(
         constants.SIGNATURE_TYPE_HEXADECIMAL,
         constants.SIGNATURE_TYPE_NO_PREPEND,
     ]
+
 
 def create_typed_signature(
     signature,
@@ -38,6 +40,7 @@ def create_typed_signature(
         raise Exception('Invalid signature type: ' + sig_type)
 
     return fix_raw_signature(signature) + '0' + str(sig_type)
+
 
 def fix_raw_signature(
     signature,
@@ -70,6 +73,7 @@ def fix_raw_signature(
     raise Exception('Invalid v value: ' + v)
 
 # ============ Byte Helpers ============
+
 
 def strip_hex_prefix(signature):
     '''

@@ -3,6 +3,7 @@
 from goldlink.modules.contract_handler import ContractHandler
 from goldlink.helpers import handle_event
 
+
 class GmxFrfEventHandler(ContractHandler):
 
     '''
@@ -66,7 +67,7 @@ class GmxFrfEventHandler(ContractHandler):
         strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
 
         return handle_event(strategy_account_abi.events.ClaimCollateral().processReceipt(transaction_receipt))
-    
+
     def handle_claim_funding_fees_event(self, strategy_account, transaction_receipt):
         '''
         Handle and return event emitted when claiming funding fees.
@@ -98,7 +99,7 @@ class GmxFrfEventHandler(ContractHandler):
         strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
 
         return handle_event(strategy_account_abi.events.CancelOrder().processReceipt(transaction_receipt))
-    
+
     def handle_order_executed_event(self, strategy_account, transaction_receipt):
         '''
         Handle and return event emitted when order is executed.
@@ -114,7 +115,7 @@ class GmxFrfEventHandler(ContractHandler):
         strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
 
         return handle_event(strategy_account_abi.events.OrderExecuted().processReceipt(transaction_receipt))
-    
+
     def handle_order_cancelled_event(self, strategy_account, transaction_receipt):
         '''
         Handle and return event emitted when and order is cancelled.
@@ -146,7 +147,7 @@ class GmxFrfEventHandler(ContractHandler):
         strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
 
         return handle_event(strategy_account_abi.events.SwapAssets().processReceipt(transaction_receipt))
-    
+
     def handle_withdraw_profit_event(self, strategy_account, transaction_receipt):
         '''
         Handle and return event emitted when withdrawing profit.
@@ -182,7 +183,7 @@ class GmxFrfEventHandler(ContractHandler):
         strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
 
         return handle_event(strategy_account_abi.events.LiquidateAssets().processReceipt(transaction_receipt))
-    
+
     def handle_liquidate_position_event(self, strategy_account, transaction_receipt):
         '''
         Handle and return event emitted when liquidating a position for a strategy account.
@@ -230,7 +231,7 @@ class GmxFrfEventHandler(ContractHandler):
         strategy_account_abi = self.get_gmxfrf_strategy_account(strategy_account)
 
         return handle_event(strategy_account_abi.events.ReleveragePosition().processReceipt(transaction_receipt))
-    
+
     def handle_swap_rebalance_position_event(self, strategy_account, transaction_receipt):
         '''
         Handle and return event emitted when a swap rebalance is performed for a strategy account.

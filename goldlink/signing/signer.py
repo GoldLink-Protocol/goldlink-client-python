@@ -83,7 +83,8 @@ class SignWithKey(Signer):
         message_hash,
         opt_signer_address,
     ):
-        # Verify if there is a signer address that it corresponds to this wallet.
+        # Verify if there is a signer address that it corresponds
+        # to this wallet.
         if (
             opt_signer_address is not None and
             opt_signer_address != self.address
@@ -103,4 +104,3 @@ class SignWithKey(Signer):
             SIGNATURE_TYPE_NO_PREPEND,
         )
         return typed_signature
-    

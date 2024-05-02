@@ -3,12 +3,13 @@
 import goldlink.constants as Constants
 from goldlink.errors import TransactionReverted
 
+
 class TransactionHandler():
 
     '''
     Module for sending transactions to GoldLink Protocol.
     '''
-        
+
     def __init__(
         self,
         web3,
@@ -23,7 +24,6 @@ class TransactionHandler():
 
         # Initialize mapping of next nonce per address.
         self._next_nonce_for_address = {}
-
 
     def send_transaction(
         self,
@@ -71,7 +71,10 @@ class TransactionHandler():
             options['value'] = 0
 
         # Set gas in options.
-        gas_multiplier = options.pop('gasMultiplier', Constants.DEFAULT_GAS_MULTIPLIER)
+        gas_multiplier = options.pop(
+            'gasMultiplier',
+            Constants.DEFAULT_GAS_MULTIPLIER,
+        )
         if 'gas' not in options:
             try:
                 options['gas'] = int(
@@ -83,7 +86,9 @@ class TransactionHandler():
         # Sign and send transaction.
         signed = self.sign_transaction(method, options)
         try:
-            transaction_hash = self.web3.eth.sendRawTransaction(signed.rawTransaction)
+            transaction_hash = self.web3.eth.sendRawTransaction(
+                signed.rawTransaction,
+            )
         except ValueError as error:
             # Try to resend with higher nonce if nonce is too low.
             while (
@@ -164,7 +169,8 @@ class TransactionHandler():
         transaction_hash,
     ):
         '''
-        Wait for a transaction to be mined and return the receipt. Raise on revert.
+        Wait for a transaction to be mined and return the receipt.
+        Raise on revert.
 
         :param transaction_hash: required
         :type transaction_hash: number
@@ -173,9 +179,10 @@ class TransactionHandler():
 
         :raises: TransactionReverted
         '''
-        transaction_receipt = self.web3.eth.waitForTransactionReceipt(transaction_hash)
+        transaction_receipt = self.web3.eth.waitForTransactionReceipt(
+            transaction_hash,
+        )
         if transaction_receipt['status'] == 0:
             raise TransactionReverted(transaction_receipt)
-        
+
         return transaction_receipt
-        
