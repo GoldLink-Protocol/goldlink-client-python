@@ -105,7 +105,7 @@ class GmxFrfReader(ContractHandler):
         '''
         return self.manager.functions.getMarketConfiguration(market).call()
     
-    def get_market_unwind_configuration(self,market):
+    def get_market_unwind_configuration(self, market):
         '''
         Get market unwind configuration for the strategy.
 
@@ -146,7 +146,6 @@ class GmxFrfReader(ContractHandler):
         '''
         Get the asset oracle configuration for the strategy.
 
-
         :param asset: required
         :type asset: address
 
@@ -185,7 +184,7 @@ class GmxFrfReader(ContractHandler):
         '''
         return self.manager.functions.gmxV2DataStore().call()
 
-    def get_gmx_v2_exchange_router(self, strategy_manager):
+    def get_gmx_v2_exchange_router(self):
         '''
         Get the GMX V2 exchange router for the strategy.
 
@@ -273,7 +272,7 @@ class GmxFrfReader(ContractHandler):
             long_token,
         ):
         '''
-        Get an account's settled funding fees for a market
+        Get an account's settled funding fees for a market.
         
         :param strategy_account: required
         :type strategy_account: address

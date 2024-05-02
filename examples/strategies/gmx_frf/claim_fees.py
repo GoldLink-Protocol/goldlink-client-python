@@ -47,4 +47,3 @@ claim_fees_transaction = client.gmx_frf_writer.claim_funding_fees(
 )
 receipt = client.gmx_frf_writer.wait_for_transaction(claim_fees_transaction)
 print("Claim Fees event: ", client.gmx_frf_event_handler.handle_claim_funding_fees_event(STRATEGY_ACCOUNT, receipt))
-
