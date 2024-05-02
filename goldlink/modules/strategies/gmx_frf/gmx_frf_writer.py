@@ -23,7 +23,7 @@ class GmxFrfWriter(ContractHandler, TransactionHandler):
         self.strategy_account = None
 
         if strategy_account:
-            self.strategy_account = self.set_strategy_account(strategy_account)
+            self.set_strategy_account(strategy_account)
 
     # -----------------------------------------------------------
     # Core Transactions
