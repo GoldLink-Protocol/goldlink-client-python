@@ -28,7 +28,6 @@ client = Client(
     network_id=constants.NETWORK_ID_FUJI,
     web3=Web3(Web3.HTTPProvider(constants.WEB_PROVIDER_URL_FUJI)),
     private_key=PRIVATE_KEY,
-    default_address=PUBLIC_KEY,
     strategy_account=STRATEGY_ACCOUNT,
 )
 
