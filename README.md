@@ -1,6 +1,6 @@
 Python client for GoldLink.
 
-The library is currently tested against Python versions 2.7, 3.5, 3.6 and 3.9.
+The library is currently tested against Python versions 3.6, 3.7, 3.8, 3.9 and 3.10.
 
 ## Installation
 
