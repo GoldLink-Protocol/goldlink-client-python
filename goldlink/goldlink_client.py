@@ -22,13 +22,20 @@ class Client(object):
         send_options=None,
         api_timeout=None,
         web3=None,
-        default_address=None,
         network_id=None,
         private_key=None,
         web3_account=None,
         web3_provider=None,
         host=None,
+        strategy_reserve=None,
+        strategy_bank=None,
+        strategy_account=None,
     ):
+        # Set Contracts if input.
+        self.strategy_reserve=strategy_reserve
+        self.strategy_bank=strategy_bank
+        self.strategy_account=strategy_account
+
         # Set API parameters if input.
         self.send_options = send_options or {}
         self.api_timeout = api_timeout or DEFAULT_API_TIMEOUT
@@ -46,7 +53,7 @@ class Client(object):
                 )
             self.web3 = web3 or Web3(web3_provider)
             self.signer = SignWithWeb3(self.web3)
-            self.default_address = default_address or self.web3.eth.defaultAccount or None
+            self.default_address = self.web3.eth.defaultAccount or None
             self.network_id = self.web3.net.version
 
         # If a private key was passed in or a web3 account, set signer and default address.
@@ -73,12 +80,12 @@ class Client(object):
         self._reader = Reader(
             web3=self.web3, 
             network_id=self.network_id, 
-            default_address=self.default_address
+            strategy_bank=self.strategy_bank,
+            strategy_reserve=self.strategy_reserve,
         )
         self._gmx_frf_reader = GmxFrfReader(
             web3=self.web3, 
             network_id=self.network_id, 
-            default_address=self.default_address
         )
         self._event_handler = EventHandler(web3=self.web3)
         self._gmx_frf_event_handler = GmxFrfEventHandler(web3=self.web3)
@@ -129,6 +136,9 @@ class Client(object):
                     private_key=private_key,
                     default_address=self.default_address,
                     send_options=self.send_options,
+                    strategy_bank=self.strategy_bank,
+                    strategy_reserve=self.strategy_reserve,
+                    strategy_account=self.strategy_account,
                 )
             else:
                 raise Exception(
@@ -136,6 +146,10 @@ class Client(object):
                     'nor web3_provider was provided OR since neither ' +
                     'private_key nor web3_account was provided',
                 )
+        
+        if self.strategy_account and not self._writer.strategy_account:
+            self._writer.set_strategy_account(self.strategy_account)
+
         return self._writer
     
 
@@ -153,6 +167,7 @@ class Client(object):
                     private_key=private_key,
                     default_address=self.default_address,
                     send_options=self.send_options,
+                    strategy_account=self.strategy_account,
                 )
             else:
                 raise Exception(
@@ -160,5 +175,9 @@ class Client(object):
                     'nor web3_provider was provided OR since neither ' +
                     'private_key nor web3_account was provided',
                 )
+        
+        if self.strategy_account and not self._gmx_frf_writer.strategy_account:
+            self._gmx_frf_writer.set_strategy_account(self.strategy_account)
+
         return self._gmx_frf_writer
     

@@ -23,7 +23,8 @@ client = Client(
     network_id=constants.NETWORK_ID_FUJI,
     web3=Web3(Web3.HTTPProvider(constants.WEB_PROVIDER_URL_FUJI)),
     private_key=PRIVATE_KEY,
-    default_address=PUBLIC_KEY,
+    strategy_bank=constants.CONTRACTS[constants.BANK][constants.NETWORK_ID_FUJI],
+    strategy_account=STRATEGY_ACCOUNT,
 )
 
 options = {
@@ -32,8 +33,8 @@ options = {
 
 print(f"Withdrawing native asset from strategy account {STRATEGY_ACCOUNT}")
 borrow_native_transaction = client.writer.withdraw_native_asset(
-    strategy_account=STRATEGY_ACCOUNT,
     amount=0,
+    on_behalf_of=PUBLIC_KEY,
     send_options=options
 )
 receipt = client.writer.wait_for_transaction(borrow_native_transaction)
@@ -41,9 +42,9 @@ print("Withdraw native, event: ", client.event_handler.handle_withdraw_native_as
 
 print(f"Withdrawing ERC20 from strategy account {STRATEGY_ACCOUNT}")
 borrow_erc20_transaction = client.writer.withdraw_erc20_assets(
-    strategy_account=STRATEGY_ACCOUNT,
     tokens=["0x82F0b3695Ed2324e55bbD9A9554cB4192EC3a514"],
     amounts=[1000],
+    on_behalf_of=PUBLIC_KEY,
     send_options=options
 )
 receipt = client.writer.wait_for_transaction(borrow_erc20_transaction)
