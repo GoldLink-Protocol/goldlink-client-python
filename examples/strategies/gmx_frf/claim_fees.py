@@ -28,7 +28,6 @@ client = Client(
     network_id=constants.NETWORK_ID_FUJI,
     web3=Web3(Web3.HTTPProvider(constants.WEB_PROVIDER_URL_FUJI)),
     private_key=PRIVATE_KEY,
-    default_address=PUBLIC_KEY,
 )
 
 client.strategy_account = STRATEGY_ACCOUNT
@@ -48,5 +47,3 @@ claim_fees_transaction = client.gmx_frf_writer.claim_funding_fees(
 )
 receipt = client.gmx_frf_writer.wait_for_transaction(claim_fees_transaction)
 print("Claim Fees event: ", client.gmx_frf_event_handler.handle_claim_funding_fees_event(STRATEGY_ACCOUNT, receipt))
-
-
