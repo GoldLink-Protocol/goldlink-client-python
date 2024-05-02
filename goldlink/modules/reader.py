@@ -79,6 +79,22 @@ class Reader(ContractHandler):
     # Borrowing Functions
     # -----------------------------------------------------------
 
+    def get_strategy_accounts_for_bank(self, owner=None):
+        '''
+        Get address of every strategy account for a bank or just owned by `owner`.
+
+        :param owner: optional
+        :type owner: address
+
+        :returns: []address
+        '''
+        strategy_account_addresses = self.strategy_bank.functions.getStrategyAccounts(0,0).call()
+
+        if owner:
+            strategy_account_addresses = [s for s in strategy_account_addresses if self.get_strategy_account(s).functions.getOwner().call() == owner]
+
+        return strategy_account_addresses
+
     def get_strategy_account_holdings(self, strategy_account):
         '''
         Get holdings for a strategy account.
