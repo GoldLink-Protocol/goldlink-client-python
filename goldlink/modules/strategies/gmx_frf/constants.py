@@ -7,6 +7,7 @@ from goldlink.constants import NETWORK_ID_FUJI
 MANAGER = 'Manager'
 ACCOUNT_GETTERS = 'Account Getters'
 DATA_STORE = 'Data Store'
+GMX_V2_READER = 'GMX V2 Reader'
 
 # ------------ Transactions ------------
 
@@ -19,5 +20,8 @@ CONTRACTS = {
     },
     DATA_STORE: {
         NETWORK_ID_FUJI: '0xEA1BFb4Ea9A412dCCd63454AbC127431eBB0F0d4'
+    },
+    GMX_V2_READER: {
+        NETWORK_ID_FUJI: '0x5699dde37406bcA54598813Ee6517758d656daE5'
     }
 }

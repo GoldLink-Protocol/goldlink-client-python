@@ -1,8 +1,11 @@
 """Module providing access to methods for reading from GoldLink Contracts for the GMX Funding-rate Farming strategy."""
 
+from web3 import Web3
+from eth_abi import encode_abi
+
 from goldlink.modules.contract_handler import ContractHandler
 from goldlink.helpers import send_raw_query
-from goldlink.modules.strategies.gmx_frf.constants import CONTRACTS, ACCOUNT_GETTERS, MANAGER, DATA_STORE
+from goldlink.modules.strategies.gmx_frf.constants import CONTRACTS, ACCOUNT_GETTERS, MANAGER, GMX_V2_READER, DATA_STORE
 
 
 class GmxFrfReader(ContractHandler):
@@ -21,11 +24,13 @@ class GmxFrfReader(ContractHandler):
 
         # Set strategy specific addresses.
         self.account_getters_address = CONTRACTS[ACCOUNT_GETTERS][self.network_id]
+        self.gmx_v2_reader_address = CONTRACTS[GMX_V2_READER][self.network_id]
         self.manager_address = CONTRACTS[MANAGER][self.network_id]
         self.data_store_address = CONTRACTS[DATA_STORE][self.network_id]
 
         # Set strategy specific contracts.
         self.manager = self.get_gmxfrf_strategy_manager(self.manager_address)
+        self.gmx_v2_reader = self.get_gmx_v2_reader(self.gmx_v2_reader_address)
 
     # -----------------------------------------------------------
     # Strategy Config Querying Functions
@@ -85,6 +90,114 @@ class GmxFrfReader(ContractHandler):
     # -----------------------------------------------------------
     # Market Querying Functions
     # -----------------------------------------------------------
+
+    def get_token_addresses_for_market(self, market):
+        '''
+        Get addresses for market.
+
+        :param market: required
+        :type market: address
+
+        :returns: Object
+        '''
+        token_addresses = self.gmx_v2_reader.functions.getMarket(
+            self.data_store_address,
+            market
+        ).call()
+
+        return {
+            "market_token": token_addresses[0],
+            "index_token": token_addresses[1],
+            "long_token": token_addresses[2],
+            "short_token": token_addresses[3],
+        }
+
+    def get_market_info(self, market):
+        '''
+        Get market information.
+
+        :param market: required
+        :type market: address
+
+        :returns: Object
+        '''
+        market_addresses = self.get_token_addresses_for_market(market)
+        short_prices = self.get_asset_price(market_addresses['short_token'])
+        long_prices = self.get_asset_price(market_addresses['long_token'])
+
+        market_info = self.gmx_v2_reader.functions.getMarketInfo(
+            self.data_store_address,
+            (
+                (long_prices["price"], long_prices["price"]),
+                (long_prices["price"], long_prices["price"]),
+                (short_prices["price"], short_prices["price"]),
+            ),
+            market
+        ).call()
+
+        return {
+            "market": {
+                "market_token": market_info[0][0],
+                "index_token": market_info[0][1],
+                "long_token": market_info[0][2],
+                "short_token": market_info[0][3],
+            },
+            "borrowing_factor_per_second_for_longs": market_info[1],
+            "borrowing_factor_per_second_for_shorts": market_info[2],
+            "base_funding": {
+                "funding_fee_amount_per_size": {
+                    "long": {
+                        "long_token": market_info[3][0][0][0],
+                        "short_token": market_info[3][0][0][1],
+                    },
+                    "short": {
+                        "long_token": market_info[3][0][1][0],
+                        "short_token": market_info[3][0][1][1],
+                    },
+                },
+                "claimable_funding_amount_per_size": {
+                    "long": {
+                        "long_token": market_info[3][1][0][0],
+                        "short_token": market_info[3][1][0][1],
+                    },
+                    "short": {
+                        "long_token": market_info[3][1][1][0],
+                        "short_token": market_info[3][1][1][1],
+                    },
+                }
+            },
+            "next_funding": {
+                "longs_pay_shorts": market_info[4][0],
+                "funding_factor_per_second": market_info[4][1],
+                "next_saved_funding_factor_per_second": market_info[4][2],
+                "funding_fee_amount_per_size_delta": {
+                    "long": {
+                        "long_token": market_info[4][3][0][0],
+                        "short_token": market_info[4][3][0][1],
+                    },
+                    "short": {
+                        "long_token": market_info[4][3][1][0],
+                        "short_token": market_info[4][3][1][1],
+                    },
+                },
+                "claimable_funding_amount_per_size_delta": {
+                    "long": {
+                        "long_token": market_info[4][4][0][0],
+                        "short_token": market_info[4][4][0][1],
+                    },
+                    "short": {
+                        "long_token": market_info[4][4][1][0],
+                        "short_token": market_info[4][4][1][1],
+                    },
+                },
+            },
+            "virtual_inventory": {
+                "virtual_pool_amount_for_long_token": market_info[5][0],
+                "virtual_pool_amount_for_short_token": market_info[5][1],
+                "virtual_inventory_for_positions": market_info[5][2],
+            },
+            "is_disabled": market_info[6]
+        }
 
     def get_available_markets(self):
         '''
@@ -162,7 +275,12 @@ class GmxFrfReader(ContractHandler):
 
         :returns: object
         '''
-        return self.manager.functions.getAssetPrice(asset).call()
+        asset_price = self.manager.functions.getAssetPrice(asset).call()
+
+        return {
+            "price": asset_price[0],
+            "decimals": asset_price[1],
+        }
 
     def get_registered_assets(self):
         '''
@@ -175,14 +293,6 @@ class GmxFrfReader(ContractHandler):
     # -----------------------------------------------------------
     # GMX Contract Querying Functions
     # -----------------------------------------------------------
-
-    def get_gmx_v2_data_store(self):
-        '''
-        Get the GMX V2 data store for the strategy.
-
-        :returns: address
-        '''
-        return self.manager.functions.gmxV2DataStore().call()
 
     def get_gmx_v2_exchange_router(self):
         '''
@@ -200,13 +310,21 @@ class GmxFrfReader(ContractHandler):
         '''
         return self.manager.functions.gmxV2OrderVault().call()
 
-    def get_gmx_v2_reader(self):
+    def get_referral_storage(self):
         '''
-        Get the GMX V2 reader for the strategy.
+        Get the referral storage address.
 
-        :returns: address
+        :return: address
         '''
-        return self.manager.functions.gmxV2Reader().call()
+        return self.manager.functions.gmxV2ReferralStorage().call()
+
+    def get_ui_fee_receiver(self):
+        '''
+        Get UI fee receiver address.
+
+        :return: address
+        '''
+        return self.manager.functions.getUiFeeReceiver().call()
 
     # -----------------------------------------------------------
     # Account Querying Functions
@@ -369,3 +487,186 @@ class GmxFrfReader(ContractHandler):
             strategy_account,
             market
         )
+
+    def get_position(self, market, strategy_account):
+        '''
+        Get a position.
+
+        :param market: required
+        :type market: address
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param market: required
+        :type market: address
+
+        :returns: Object
+        '''
+        position_key = self.get_position_key(market, strategy_account)
+
+        position = self.gmx_v2_reader.functions.getPosition(
+            self.data_store_address,
+            position_key,
+        ).call()
+
+        return {
+            "addresses": {
+                "account": position[0][0],
+                "market": position[0][1],
+                "collateral_token": position[0][2],
+            },
+            "numbers": {
+                "size_in_usd": position[1][0],
+                "size_in_tokens": position[1][1],
+                "collateral_amount": position[1][2],
+                "borrowing_factor": position[1][3],
+                "funding_fee_amount_per_size": position[1][4],
+                "long_token_claimable_funding_amount_per_size": position[1][5],
+                "short_token_claimable_funding_amount_per_size": position[1][6],
+                "increased_at_block": position[1][7],
+                "decreased_at_block": position[1][8],
+            },
+            "flags": {
+                "isLong": position[2][0],
+            }
+        }
+
+    def get_position_info(self, market, strategy_account):
+        '''
+        Get a position's info.
+
+        :param market: required
+        :type market: address
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param market: required
+        :type market: address
+
+        :returns: Object
+        '''
+        market_addresses = self.get_token_addresses_for_market(market)
+        short_prices = self.get_asset_price(market_addresses['short_token'])
+        long_prices = self.get_asset_price(market_addresses['long_token'])
+
+        position = self.get_position(market, strategy_account)
+
+        position_info = self.gmx_v2_reader.functions.getPositionInfo(
+            self.data_store_address,
+            self.get_referral_storage(),
+            self.get_position_key(market, strategy_account),
+            (
+                (long_prices["price"], long_prices["price"]),
+                (long_prices["price"], long_prices["price"]),
+                (short_prices["price"], short_prices["price"]),
+            ),
+            position["numbers"]["size_in_usd"],
+            self.get_ui_fee_receiver(),
+            True,
+        ).call()
+
+        return {
+            "position": {
+                "addresses": {
+                    "account": position_info[0][0][0],
+                    "market": position_info[0][0][1],
+                    "collateral_token": position_info[0][0][2],
+                },
+                "numbers": {
+                    "size_in_usd": position_info[0][1][0],
+                    "size_in_tokens": position_info[0][1][1],
+                    "collateral_amount": position_info[0][1][2],
+                    "borrowing_factor": position_info[0][1][3],
+                    "funding_fee_amount_per_size": position_info[0][1][4],
+                    "long_token_claimable_funding_amount_per_size": position_info[0][1][5],
+                    "short_token_claimable_funding_amount_per_size": position_info[0][1][6],
+                    "increased_at_block": position_info[0][1][7],
+                    "decreased_at_block": position_info[0][1][8],
+                },
+                "flags": {
+                    "isLong": position_info[0][2][0],
+                }
+            },
+            "fees": {
+                "referral": {
+                    "referral_code": position_info[1][0][0],
+                    "affiliate": position_info[1][0][1],
+                    "trader": position_info[1][0][2],
+                    "total_rebate_factor": position_info[1][0][3],
+                    "trader_discount_factor": position_info[1][0][4],
+                    "total_rebate_amount": position_info[1][0][5],
+                    "trader_discount_amount": position_info[1][0][6],
+                    "affiliate_reward_amount": position_info[1][0][7]
+                },
+                "funding": {
+                    "funding_fee_amount": position_info[1][1][0],
+                    "claimable_long_token_amount": position_info[1][1][1],
+                    "claimable_short_token_amount": position_info[1][1][2],
+                    "latest_funding_fee_amount_per_size": position_info[1][1][3],
+                    "latest_long_token_claimable_funding_amount_per_size": position_info[1][1][4],
+                    "latest_short_token_claimable_funding_amount_per_size": position_info[1][1][5],
+                },
+                "borrowing": {
+                    "borrowing_fee_usd": position_info[1][2][0],
+                    "borrowing_fee_amount": position_info[1][2][1],
+                    "borrowing_fee_receiver_factor": position_info[1][2][2],
+                    "borrowing_fee_amount_for_fee_receiver": position_info[1][2][3],
+                },
+                "ui": {
+                    "ui_fee_receiver": position_info[1][3][0],
+                    "ui_fee_receiver_factor": position_info[1][3][1],
+                    "ui_fee_amount": position_info[1][3][2],
+                },
+                "collateral_token_price": {
+                    "min": position_info[1][4][0],
+                    "max": position_info[1][4][1],
+                },
+                "position_fee_factor": position_info[1][5],
+                "protocol_fee_amount": position_info[1][6],
+                "position_fee_receiver_factor": position_info[1][7],
+                "fee_receiver_amount": position_info[1][8],
+                "fee_amount_for_pool": position_info[1][9],
+                "position_fee_amount_for_pool": position_info[1][10],
+                "position_fee_amount": position_info[1][11],
+                "total_cost_amount_excluding_funding": position_info[1][12],
+                "total_cost_amount": position_info[1][13],
+            },
+            "execution_price_result": {
+                "price_impact_usd": position_info[2][0],
+                "price_impact_diff_usd": position_info[2][1],
+                "execution_price": position_info[2][2],
+            },
+            "base_pnl_usd": position_info[3],
+            "uncapped_base_pnl_usd": position_info[4],
+            "pnl_after_price_impact_usd": position_info[5],
+        }
+
+    # -----------------------------------------------------------
+    # Utility Functions
+    # -----------------------------------------------------------
+
+    def get_position_key(self, market, strategy_account):
+        '''
+        Get a position's key.
+
+        :param market: required
+        :type market: address
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param market: required
+        :type market: address
+
+        :returns: str
+        '''
+        market_addresses = self.get_token_addresses_for_market(market)
+        return Web3.solidityKeccak(
+            ['bytes'],
+            [encode_abi(
+                ['address', 'address', 'address', 'bool'],
+                [strategy_account, market, market_addresses['long_token'], False],
+            )],
+        ).hex()

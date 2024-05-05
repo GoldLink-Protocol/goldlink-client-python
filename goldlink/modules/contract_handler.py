@@ -109,6 +109,17 @@ class ContractHandler(object):
         '''
         return self.get_contract(account_getters, Constants.GMX_FRF_ACCOUNT_GETTERS_ABI)
 
+    def get_gmx_v2_reader(self, gmx_v2_reader):
+        '''
+        Get ABI of the GmxV2Reader.
+
+        :param account_getters: required
+        :type account_getters: address
+
+        :returns: Object
+        '''
+        return self.get_contract(gmx_v2_reader, Constants.GMX_V2_READER_ABI)
+
     # -----------------------------------------------------------
     # Utility Functions
     # -----------------------------------------------------------

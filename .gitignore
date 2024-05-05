@@ -13,3 +13,8 @@ test_local.py
 __pycache__/
 *.py[cod]
 .python-version
+
+# Build Files
+*.egg-info/
+*dist/
+*build/
