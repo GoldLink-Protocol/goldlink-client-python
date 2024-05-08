@@ -46,7 +46,7 @@ print(
     f"All strategy accounts: {client.reader.get_strategy_accounts_for_bank()}",
 )
 print(
-    f"Owned strategy accounts: {client.reader.get_strategy_accounts_for_bank(PUBLIC_KEY)}",
+    f"Owned strategy accounts: {client.reader.get_strategy_accounts_for_bank(PUBLIC_KEY, 1)}",
 )
 
 print(f"Deploying strategy account for strategy bank {client.strategy_bank}")

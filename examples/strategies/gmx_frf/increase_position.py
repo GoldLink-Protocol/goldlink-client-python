@@ -21,7 +21,7 @@ PRIVATE_KEY = os.getenv('TEST_OWNER_PRIVATE_KEY')
 STRATEGY_ACCOUNT = os.getenv('GMX_FRF_ACCOUNT')
 
 # Market
-GMX_MARKET = "0xD996ff47A1F763E1e55415BC4437c59292D1F415"
+AVAX_USDC = "0xD996ff47A1F763E1e55415BC4437c59292D1F415"
 
 # Initialize client.
 client = Client(
@@ -39,7 +39,7 @@ options = {
 # Increase position.
 print("Increasing GMX Market position")
 increase_position_transaction = client.gmx_frf_writer.create_increase_order(
-    market=GMX_MARKET,
+    market=AVAX_USDC,
     amount=60000000,
     execution_fee=2500000000000000000,
     send_options=options
