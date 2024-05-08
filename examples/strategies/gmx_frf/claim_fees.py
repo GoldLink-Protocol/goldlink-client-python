@@ -21,7 +21,7 @@ PRIVATE_KEY = os.getenv('TEST_OWNER_PRIVATE_KEY')
 STRATEGY_ACCOUNT = os.getenv('GMX_FRF_ACCOUNT')
 
 # Market
-GMX_MARKET = "0xD996ff47A1F763E1e55415BC4437c59292D1F415"
+AVAX_USDC = "0xD996ff47A1F763E1e55415BC4437c59292D1F415"
 
 # Initialize client.
 client = Client(
@@ -41,7 +41,7 @@ USDC = constants.CONTRACTS[constants.ASSET_USDC][constants.NETWORK_ID_FUJI]
 # Increase position.
 print("Claiming fees for one or more GMX Market position")
 claim_fees_transaction = client.gmx_frf_writer.claim_funding_fees(
-    markets=[GMX_MARKET],
+    markets=[AVAX_USDC],
     assets=[USDC],
     send_options=options
 )

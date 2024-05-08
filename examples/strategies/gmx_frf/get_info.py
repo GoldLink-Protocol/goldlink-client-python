@@ -21,7 +21,7 @@ PRIVATE_KEY = os.getenv('TEST_OWNER_PRIVATE_KEY')
 STRATEGY_ACCOUNT = os.getenv('GMX_FRF_ACCOUNT')
 
 # Market
-GMX_MARKET = "0xD996ff47A1F763E1e55415BC4437c59292D1F415"
+AVAX_USDC = "0xD996ff47A1F763E1e55415BC4437c59292D1F415"
 
 # Initialize client.
 client = Client(
@@ -33,7 +33,7 @@ client = Client(
 client.strategy_account = STRATEGY_ACCOUNT
 
 print("Referral storage:", client.gmx_frf_reader.get_referral_storage())
-print("Market token Addresses: ", client.gmx_frf_reader.get_token_addresses_for_market(GMX_MARKET))
-print("Position: ", client.gmx_frf_reader.get_position(GMX_MARKET, STRATEGY_ACCOUNT))
-print("Market Info: ", client.gmx_frf_reader.get_market_info(GMX_MARKET))
-print("Position info: ", client.gmx_frf_reader.get_position_info(GMX_MARKET, STRATEGY_ACCOUNT))
+print("Market token Addresses: ", client.gmx_frf_reader.get_token_addresses_for_market(AVAX_USDC))
+print("Position: ", client.gmx_frf_reader.get_position(AVAX_USDC, STRATEGY_ACCOUNT))
+print("Market Info: ", client.gmx_frf_reader.get_market_info(AVAX_USDC))
+print("Position info: ", client.gmx_frf_reader.get_position_info(AVAX_USDC, STRATEGY_ACCOUNT))
