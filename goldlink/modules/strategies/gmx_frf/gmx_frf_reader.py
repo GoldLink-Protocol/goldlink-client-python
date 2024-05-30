@@ -210,7 +210,6 @@ class GmxFrfReader(ContractHandler):
         ''' 
         market_info = self.get_market_info(market)
         net_funding = market_info["next_funding"]["funding_factor_per_second"]
-        
         direction = -1
         if market_info["next_funding"]["longs_pay_shorts"]:
             direction = 1
@@ -219,8 +218,7 @@ class GmxFrfReader(ContractHandler):
         net_funding = net_funding - market_info["borrowing_factor_per_second_for_shorts"]
         net_funding = net_funding * 60 * 60
 
-        return net_funding / 10**25
-         
+        return net_funding
 
     def get_available_markets(self):
         '''
