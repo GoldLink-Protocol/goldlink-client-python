@@ -6,7 +6,7 @@ NETWORK_ID_FUJI = 43113
 
 # ------------  Provider URLs ------------
 
-WEB_PROVIDER_URL_ARBITRUM_MAINNET = 'https://arbitrum.llamarpc.com	'
+WEB_PROVIDER_URL_ARBITRUM_MAINNET = 'https://arb1.arbitrum.io/rpc'
 WEB_PROVIDER_URL_FUJI = 'https://rpc.ankr.com/avalanche_fuji'
 
 # ------------ Signature Types ------------

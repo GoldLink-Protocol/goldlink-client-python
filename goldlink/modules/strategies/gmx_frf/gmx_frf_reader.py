@@ -198,6 +198,27 @@ class GmxFrfReader(ContractHandler):
             },
             "is_disabled": market_info[6]
         }
+    
+    def get_market_net_funding_rate(self, market):
+        '''
+        Get net funding rate for a market.
+
+        :param market: required
+        :type market: address
+
+        :returns: integer
+        ''' 
+        market_info = self.get_market_info(market)
+        net_funding = market_info["next_funding"]["funding_factor_per_second"]
+        direction = -1
+        if market_info["next_funding"]["longs_pay_shorts"]:
+            direction = 1
+        
+        net_funding = net_funding * direction
+        net_funding = net_funding - market_info["borrowing_factor_per_second_for_shorts"]
+        net_funding = net_funding * 60 * 60
+
+        return net_funding
 
     def get_available_markets(self):
         '''
