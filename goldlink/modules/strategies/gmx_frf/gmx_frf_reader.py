@@ -419,7 +419,7 @@ class GmxFrfReader(ContractHandler):
         :param long_token: required
         :type long_token: address
 
-        :returns: Object
+        :returns: integer
         '''
         return send_raw_query(
             self.web3.provider.endpoint_uri,
@@ -445,7 +445,7 @@ class GmxFrfReader(ContractHandler):
         :param token: required
         :type token: address
 
-        :returns: Object
+        :returns: integer
         '''
         key = self.get_claimable_funding_key(market, token, strategy_account)
         return self.igmx_v2_datastore.functions.getUint(key).call()
