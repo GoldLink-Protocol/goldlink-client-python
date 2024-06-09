@@ -120,6 +120,17 @@ class ContractHandler(object):
         '''
         return self.get_contract(gmx_v2_reader, Constants.GMX_V2_READER_ABI)
 
+    def get_igmx_v2_datastore(self, gmx_v2_datastore):
+        '''
+        Get ABI of the IGMXV2Datastore
+
+        :param gmx_v2_datastore: required
+        :type gmx_v2_datastore: address
+
+        :returns: Object
+        '''
+        return self.get_contract(gmx_v2_datastore, Constants.IGMX_V2_DATASTORE_ABI)
+
     # -----------------------------------------------------------
     # Utility Functions
     # -----------------------------------------------------------

@@ -31,6 +31,7 @@ class GmxFrfReader(ContractHandler):
         # Set strategy specific contracts.
         self.manager = self.get_gmxfrf_strategy_manager(self.manager_address)
         self.gmx_v2_reader = self.get_gmx_v2_reader(self.gmx_v2_reader_address)
+        self.igmx_v2_datastore = self.get_igmx_v2_datastore(self.data_store_address)
 
     # -----------------------------------------------------------
     # Strategy Config Querying Functions
@@ -431,6 +432,24 @@ class GmxFrfReader(ContractHandler):
             long_token
         )
 
+    def get_settled_funding_fees_for_token(self, strategy_account, market, token):
+        '''
+        Get an account's settled funding fees for a token.
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :param market: required
+        :type market: address
+
+        :param token: required
+        :type token: address
+
+        :returns: Object
+        '''
+        key = self.get_claimable_funding_key(market, token, strategy_account)
+        return self.igmx_v2_datastore.functions.getUint(key).call()
+
     def get_settled_funding_fees_value_usd(self, strategy_account):
         '''
         Get an account's settled funding fees total USD value.
@@ -678,9 +697,6 @@ class GmxFrfReader(ContractHandler):
         :param strategy_account: required
         :type strategy_account: address
 
-        :param market: required
-        :type market: address
-
         :returns: str
         '''
         market_addresses = self.get_token_addresses_for_market(market)
@@ -691,3 +707,35 @@ class GmxFrfReader(ContractHandler):
                 [strategy_account, market, market_addresses['long_token'], False],
             )],
         ).hex()
+
+    def get_claimable_funding_key(self, market, token, strategy_account):
+        '''
+        Get a position's claimable funding key.
+
+        :param market: required
+        :type market: address
+
+        :param token: required
+        :type token: address
+
+        :param strategy_account: required
+        :type strategy_account: address
+
+        :returns: str
+        '''
+        encoded_key = Web3.solidityKeccak(
+            ['bytes'],
+            [encode_abi(
+                ['string'],
+                ['CLAIMABLE_FUNDING_AMOUNT'],
+            )]
+        )
+
+        return Web3.solidityKeccak(
+            ['bytes'],
+            [encode_abi(
+                ['bytes32', 'address', 'address', 'address'],
+                [encoded_key, market, token, strategy_account],
+            )],
+        ).hex()
+        
