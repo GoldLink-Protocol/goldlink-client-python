@@ -83,6 +83,11 @@
                 "internalType": "address"
               },
               {
+                "name": "cancellationReceiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
                 "name": "callbackContract",
                 "type": "address",
                 "internalType": "address"
@@ -163,6 +168,11 @@
                 "name": "updatedAtBlock",
                 "type": "uint256",
                 "internalType": "uint256"
+              },
+              {
+                "name": "updatedAtTime",
+                "type": "uint256",
+                "internalType": "uint256"
               }
             ]
           },
@@ -183,6 +193,11 @@
               },
               {
                 "name": "isFrozen",
+                "type": "bool",
+                "internalType": "bool"
+              },
+              {
+                "name": "autoCancel",
                 "type": "bool",
                 "internalType": "bool"
               }
@@ -518,6 +533,11 @@
                 "internalType": "address"
               },
               {
+                "name": "cancellationReceiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
                 "name": "callbackContract",
                 "type": "address",
                 "internalType": "address"
@@ -598,6 +618,11 @@
                 "name": "updatedAtBlock",
                 "type": "uint256",
                 "internalType": "uint256"
+              },
+              {
+                "name": "updatedAtTime",
+                "type": "uint256",
+                "internalType": "uint256"
               }
             ]
           },
@@ -618,6 +643,11 @@
               },
               {
                 "name": "isFrozen",
+                "type": "bool",
+                "internalType": "bool"
+              },
+              {
+                "name": "autoCancel",
                 "type": "bool",
                 "internalType": "bool"
               }
@@ -1052,6 +1082,11 @@
                 "internalType": "address"
               },
               {
+                "name": "cancellationReceiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
                 "name": "callbackContract",
                 "type": "address",
                 "internalType": "address"
@@ -1137,6 +1172,11 @@
           },
           {
             "name": "shouldUnwrapNativeToken",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "autoCancel",
             "type": "bool",
             "internalType": "bool"
           },
@@ -1192,6 +1232,11 @@
                 "internalType": "address"
               },
               {
+                "name": "cancellationReceiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
                 "name": "callbackContract",
                 "type": "address",
                 "internalType": "address"
@@ -1277,6 +1322,11 @@
           },
           {
             "name": "shouldUnwrapNativeToken",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "autoCancel",
             "type": "bool",
             "internalType": "bool"
           },
@@ -1325,6 +1375,11 @@
         "name": "receiever",
         "type": "address",
         "internalType": "address"
+      },
+      {
+        "name": "data",
+        "type": "bytes",
+        "internalType": "bytes"
       }
     ],
     "outputs": [],
@@ -1363,6 +1418,11 @@
             "components": [
               {
                 "name": "receiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "cancellationReceiver",
                 "type": "address",
                 "internalType": "address"
               },
@@ -1452,6 +1512,11 @@
           },
           {
             "name": "shouldUnwrapNativeToken",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "autoCancel",
             "type": "bool",
             "internalType": "bool"
           },
@@ -1520,6 +1585,11 @@
                 "internalType": "address"
               },
               {
+                "name": "cancellationReceiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
                 "name": "callbackContract",
                 "type": "address",
                 "internalType": "address"
@@ -1605,6 +1675,11 @@
           },
           {
             "name": "shouldUnwrapNativeToken",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "autoCancel",
             "type": "bool",
             "internalType": "bool"
           },
@@ -1660,6 +1735,11 @@
                 "internalType": "address"
               },
               {
+                "name": "cancellationReceiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
                 "name": "callbackContract",
                 "type": "address",
                 "internalType": "address"
@@ -1745,6 +1825,11 @@
           },
           {
             "name": "shouldUnwrapNativeToken",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "autoCancel",
             "type": "bool",
             "internalType": "bool"
           },
@@ -1805,6 +1890,11 @@
         "name": "receiver",
         "type": "address",
         "internalType": "address"
+      },
+      {
+        "name": "data",
+        "type": "bytes",
+        "internalType": "bytes"
       }
     ],
     "outputs": [],
@@ -1840,6 +1930,11 @@
             "internalType": "uint256"
           }
         ]
+      },
+      {
+        "name": "data",
+        "type": "bytes",
+        "internalType": "bytes"
       }
     ],
     "outputs": [],
@@ -2185,6 +2280,11 @@
                 "internalType": "address"
               },
               {
+                "name": "cancellationReceiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
                 "name": "callbackContract",
                 "type": "address",
                 "internalType": "address"
@@ -2270,6 +2370,11 @@
           },
           {
             "name": "shouldUnwrapNativeToken",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "autoCancel",
             "type": "bool",
             "internalType": "bool"
           },
@@ -2316,6 +2421,11 @@
                 "internalType": "address"
               },
               {
+                "name": "cancellationReceiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
                 "name": "callbackContract",
                 "type": "address",
                 "internalType": "address"
@@ -2401,6 +2511,11 @@
           },
           {
             "name": "shouldUnwrapNativeToken",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "autoCancel",
             "type": "bool",
             "internalType": "bool"
           },
@@ -2510,6 +2625,11 @@
                 "internalType": "address"
               },
               {
+                "name": "cancellationReceiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
                 "name": "callbackContract",
                 "type": "address",
                 "internalType": "address"
@@ -2595,6 +2715,11 @@
           },
           {
             "name": "shouldUnwrapNativeToken",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "autoCancel",
             "type": "bool",
             "internalType": "bool"
           },
@@ -2698,6 +2823,11 @@
                 "internalType": "address"
               },
               {
+                "name": "cancellationReceiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
                 "name": "callbackContract",
                 "type": "address",
                 "internalType": "address"
@@ -2783,6 +2913,11 @@
           },
           {
             "name": "shouldUnwrapNativeToken",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "autoCancel",
             "type": "bool",
             "internalType": "bool"
           },
@@ -2835,6 +2970,11 @@
                 "internalType": "address"
               },
               {
+                "name": "cancellationReceiver",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
                 "name": "callbackContract",
                 "type": "address",
                 "internalType": "address"
@@ -2920,6 +3060,11 @@
           },
           {
             "name": "shouldUnwrapNativeToken",
+            "type": "bool",
+            "internalType": "bool"
+          },
+          {
+            "name": "autoCancel",
             "type": "bool",
             "internalType": "bool"
           },
