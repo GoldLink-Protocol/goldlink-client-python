@@ -12,7 +12,7 @@ REQUIREMENTS = [
 
 setup(
     name='goldlink-client-python',
-    version='0.0.8',
+    version='0.0.9',
     packages=find_packages(),
     package_data={
         'goldlink': [
